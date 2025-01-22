@@ -19,12 +19,9 @@ InteractPro is a modern real-time chat application designed to enhance communica
 ## Features
 
 - **Real-time Messaging:** Instant communication with zero lag.
-- **Group Collaboration:** Create and join multiple chat rooms.
-- **AI-Powered Assistance:** Smart suggestions and automated responses.
 - **Secure Authentication:** Profile management with JWT-based authentication.
 - **Cross-Platform Support:** Seamless experience across devices.
 - **File Sharing:** Upload and share files effortlessly.
-- **Customizable UI:** Tailored themes and settings for user preferences.
 
 ## Tech Stack
 
