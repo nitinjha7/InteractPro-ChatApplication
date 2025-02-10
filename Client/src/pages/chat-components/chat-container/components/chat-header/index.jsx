@@ -21,7 +21,7 @@ const ChatHeader = () => {
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="h-[70px] border-b border-dark-accent/10 bg-dark-secondary/80 backdrop-blur-xl flex items-center justify-between px-6 relative z-10"
+      className="h-[70px] border-b border-dark-accent/10 bg-dark-secondary/80 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-50"
     >
       <div className="flex items-center gap-4">
         <div className="relative">
