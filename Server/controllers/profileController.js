@@ -24,7 +24,8 @@ const updateProfile = async (req, res) => {
             email: userData.email,
             firstName: userData.firstName,
             lastName: userData.lastName,
-            profileSetup: userData.profileSetup
+            profileSetup: userData.profileSetup,
+            image: userData.image
         })
     }
     catch (err){
