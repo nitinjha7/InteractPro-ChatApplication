@@ -7,6 +7,7 @@ import Chat from "./pages/Chat";
 import Profile from "./pages/Profile";
 import { useStore } from "@/store/store";
 import apiClient from "./lib/apiClient";
+import Loader from "./pages/Loader";
 
 const ProtectedRoutes = ({ children }) => {
   const { userInfo } = useStore();
@@ -53,7 +54,7 @@ const App = () => {
   }, [userInfo, setUserInfo]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />
   }
 
 

@@ -16,6 +16,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Lottie from "lottie-react";
+import animationData from "@/assets/animation.json"
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -122,16 +124,19 @@ const handleSignUp = async () => {
 
           <div className="relative z-10">
             <h1 className="text-4xl font-bold text-white mb-6">
-              Welcome to ChatApp
+              Welcome to <span className="text-black font-bold text-6xl">InteractPro</span>
             </h1>
             <p className="text-blue-100 text-lg">
               Connect with friends and colleagues in a secure and modern
               environment.
             </p>
+            <div className="w-48 mx-auto mt-4 scale-150">
+              <Lottie animationData={animationData} loop={true} />
+            </div>
           </div>
 
           <div className="relative z-10">
-            <div className="flex flex-col gap-4">
+            <div className="flex gap-4">
               <div className="flex items-center gap-3 text-blue-100">
                 <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
                   <motion.div
@@ -318,8 +323,7 @@ const handleSignUp = async () => {
                 )}
               </Button>
 
-              {/* Divider */}
-              <div className="relative">
+              {/* <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-700" />
                 </div>
@@ -330,7 +334,6 @@ const handleSignUp = async () => {
                 </div>
               </div>
 
-              {/* Social Logins */}
               <div className="grid grid-cols-2 gap-4">
                 <Button
                   variant="outline"
@@ -346,7 +349,7 @@ const handleSignUp = async () => {
                   <Twitter className="h-4 w-4 mr-2" />
                   Twitter
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </motion.div>

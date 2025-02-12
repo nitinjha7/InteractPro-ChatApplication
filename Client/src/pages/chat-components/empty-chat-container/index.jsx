@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { MessageSquare, Users, Zap, ArrowRight } from "lucide-react";
+import { MessageSquare, Code, Zap, ArrowRight } from "lucide-react";
+import DmDialog from "@/pages/chat-components/contacts-dialog-box/index.jsx";
+import { useStore } from "@/store/store";
 
 const EmptyChatContainer = () => {
+  const [openNewContactModal, setOpenNewContactModal] = useState(false);
+  const { setSelectedChatData, setSelectedChatType } = useStore();
+
+  const handleSelectContact = (contact) => {
+    setSelectedChatData(contact);
+    setSelectedChatType("dm");
+  };
+
   const features = [
     {
       icon: <MessageSquare className="w-6 h-6" />,
@@ -10,13 +20,25 @@ const EmptyChatContainer = () => {
       description: "Experience instant communication with zero lag",
     },
     {
-      icon: <Users className="w-6 h-6" />,
-      title: "Group Collaboration",
-      description: "Create and manage multiple chat rooms effortlessly",
+      icon: <Code className="w-6 h-6" />,
+      title: "Code Snippet Sharing",
+      description: "Send and receive code snippets directly in the chat",
     },
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Smart Features",
+      title: (
+        <span className="flex items-center gap-2">
+          Smart Features
+          <motion.span
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ repeat: Infinity, repeatType: "mirror", duration: 1 }}
+            className="bg-yellow-500 text-black text-xs font-semibold px-2 py-1 rounded-md"
+          >
+            Coming Soon
+          </motion.span>
+        </span>
+      ),
       description: "AI-powered suggestions and automated responses",
     },
   ];
@@ -59,9 +81,7 @@ const EmptyChatContainer = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
-              onClick={() => {
-                /* Add your start chat logic */
-              }}
+              onClick={() => setOpenNewContactModal(true)}
             >
               Start Chatting
               <ArrowRight className="w-4 h-4" />
@@ -93,6 +113,12 @@ const EmptyChatContainer = () => {
           </motion.div>
         </motion.div>
       </div>
+
+      <DmDialog
+        open={openNewContactModal}
+        onOpenChange={setOpenNewContactModal}
+        onSelectContact={handleSelectContact}
+      />
     </div>
   );
 };
