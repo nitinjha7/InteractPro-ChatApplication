@@ -6,18 +6,10 @@ import apiClient from "@/lib/apiClient";
 import { useStore } from "@/store/store";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  Github,
-  Twitter,
-  Loader2,
-} from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Loader2, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Lottie from "lottie-react";
-import animationData from "@/assets/animation.json"
+import animationData from "@/assets/animation.json";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,6 +18,7 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(true); // Cold start alert
   const { setUserInfo } = useStore();
   const navigate = useNavigate();
 
@@ -57,31 +50,27 @@ const Auth = () => {
     return true;
   };
 
-const handleSignUp = async () => {
-  if (validateSignup(email, password, confirmPassword)) {
-    setLoading(true);
-    try {
-      console.log("Sending request to signup:", { email, password });
-      const response = await apiClient.post(
-        "api/auth/signup",
-        { email, password },
-        { withCredentials: true }
-      );
-      console.log("Signup response:", response);
-      if (response.status === 201) {
-        setUserInfo(response.data.user);
-        toast.success("Account created successfully");
-        navigate("/profile");
+  const handleSignUp = async () => {
+    if (validateSignup(email, password, confirmPassword)) {
+      setLoading(true);
+      try {
+        const response = await apiClient.post(
+          "api/auth/signup",
+          { email, password },
+          { withCredentials: true }
+        );
+        if (response.status === 201) {
+          setUserInfo(response.data.user);
+          toast.success("Account created successfully");
+          navigate("/profile");
+        }
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Signup failed");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Signup error:", error.response || error);
-      toast.error(error.response?.data?.message || "Signup failed");
-    } finally {
-      setLoading(false);
     }
-  }
-};
-
+  };
 
   const handleLogIn = async () => {
     if (validateLogin(email, password)) {
@@ -118,13 +107,12 @@ const handleSignUp = async () => {
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-12 flex-col justify-between relative overflow-hidden"
+          className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-12 flex-col justify-between relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-blue-700/90 to-indigo-800/90 backdrop-blur-sm" />
-
           <div className="relative z-10">
             <h1 className="text-4xl font-bold text-white mb-6">
-              Welcome to <span className="text-black font-bold text-6xl">InteractPro</span>
+              Welcome to{" "}
+              <span className="text-black font-bold text-6xl">InteractPro</span>
             </h1>
             <p className="text-blue-100 text-lg">
               Connect with friends and colleagues in a secure and modern
@@ -133,63 +121,6 @@ const handleSignUp = async () => {
             <div className="w-48 mx-auto mt-4 scale-150">
               <Lottie animationData={animationData} loop={true} />
             </div>
-          </div>
-
-          <div className="relative z-10">
-            <div className="flex gap-4">
-              <div className="flex items-center gap-3 text-blue-100">
-                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  >
-                    ⚡
-                  </motion.div>
-                </div>
-                <p>Real-time messaging</p>
-              </div>
-              <div className="flex items-center gap-3 text-blue-100">
-                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  🔒
-                </div>
-                <p>End-to-end encryption</p>
-              </div>
-              <div className="flex items-center gap-3 text-blue-100">
-                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  🌐
-                </div>
-                <p>Cross-platform support</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 opacity-10">
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-16 h-16 border border-white/20 rounded-full"
-                animate={{
-                  scale: [1, 2, 1],
-                  opacity: [0.1, 0.2, 0.1],
-                  x: Math.random() * 400 - 200,
-                  y: Math.random() * 400 - 200,
-                }}
-                transition={{
-                  duration: Math.random() * 3 + 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-              />
-            ))}
           </div>
         </motion.div>
 
@@ -201,6 +132,25 @@ const handleSignUp = async () => {
           className="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col justify-center"
         >
           <div className="max-w-md w-full mx-auto space-y-8">
+            {/* Backend Cold Start Alert */}
+            <AnimatePresence>
+              {showAlert && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-yellow-500/10 text-yellow-300 border border-yellow-500 p-3 rounded-lg flex items-center justify-between"
+                >
+                  <p className="text-sm">
+                    Our servers may take a few seconds to start if they have
+                    been idle. Please be patient!
+                  </p>
+                  <button onClick={() => setShowAlert(false)}>
+                    <XCircle className="h-5 w-5 text-yellow-400 hover:text-yellow-500 transition" />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
             {/* Auth Toggle */}
             <div className="flex justify-center mb-8">
               <div className="relative bg-gray-800/50 p-1 rounded-xl flex justify-between items-center backdrop-blur-sm border border-gray-700 w-full max-w-xs">
