@@ -13,9 +13,7 @@ import {
 
 const ChatHeader = () => {
   const { closeChat, selectedChatData } = useStore();
-  const imageUrl = selectedChatData?.image
-    ? `${import.meta.env.VITE_APP_SERVER_URL}/${selectedChatData.image}`
-    : null;
+  const imageUrl = selectedChatData?.image ? selectedChatData.image : null;
 
   return (
     <motion.div

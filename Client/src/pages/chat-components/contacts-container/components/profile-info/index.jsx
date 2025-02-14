@@ -33,9 +33,7 @@ const ProfileInfo = () => {
     }
   };
 
-  const imageUrl = userInfo?.image
-    ? `${import.meta.env.VITE_APP_SERVER_URL}/${userInfo.image}`
-    : null;
+  const imageUrl = userInfo.image? userInfo.image : null;
 
   return (
     <motion.div

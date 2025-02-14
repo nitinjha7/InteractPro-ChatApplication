@@ -7,11 +7,7 @@ const {
   uploadImage,
   deleteImage,
 } = require("../controllers/profileController");
-
-
-const upload = multer({
-    dest: 'uploads/profile-images'
-})
+const upload = require('../middlewares/upload');
 
 router.post('/update-profile', verifyToken, updateProfile);
 router.post('/upload-image', verifyToken, upload.single('profile-image'), uploadImage);

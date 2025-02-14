@@ -25,9 +25,7 @@ const DMList = () => {
   return (
     <div className="space-y-1">
       {dmContacts.map((contact, index) => {
-        const imageUrl = contact.image
-          ? `${import.meta.env.VITE_APP_SERVER_URL}/${contact.image}`
-          : null;
+        const imageUrl = contact.image ? contact.image : null;
         const isSelected = selectedChatData?._id === contact._id;
 
         return (

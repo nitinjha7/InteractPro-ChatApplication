@@ -30,7 +30,7 @@ const Profile = () => {
     }
 
     if (userInfo.image) {
-      setImage(`${import.meta.env.VITE_APP_SERVER_URL}/${userInfo.image}`);
+      setImage(userInfo.image);
     }
   }, [userInfo]);
 
@@ -88,6 +88,8 @@ const Profile = () => {
         if (response.status === 200 && response.data.image) {
           setUserInfo({ ...userInfo, image: response.data.image });
           toast.success("Profile picture updated");
+          console.log("Response after image uploaded: ", response.data);
+          console.log("Updated userinfo: ", userInfo);
         }
       } catch (error) {
         toast.error("Failed to upload image");
