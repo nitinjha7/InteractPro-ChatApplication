@@ -55,9 +55,9 @@ const logIn = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, data.password);
 
-    console.log("Req Password: ",password); // Plain text password from login
-    console.log("Hashed Password", data.password); // Hashed password from the database
-    console.log(await bcrypt.compare(password, data.password)); // Should return true or false
+    // console.log("Req Password: ",password); // Plain text password from login
+    // console.log("Hashed Password", data.password); // Hashed password from the database
+    // console.log(await bcrypt.compare(password, data.password)); // Should return true or false
 
     if (!isMatch) {
       return res.status(400).json({
@@ -89,10 +89,10 @@ const logIn = async (req, res) => {
 
 const getUserInfo = async (req, res, next) => {
   try {
-    console.log("User ID : ", req.id);
+    // console.log("User ID : ", req.id);
     const user = await User.findById(req.id);
     if(!user){
-      console.log("No user found");
+      // console.log("No user found");
       return res.status(404).json({
         Error: "User not found"
       })

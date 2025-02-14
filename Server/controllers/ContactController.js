@@ -17,8 +17,8 @@
       );
       const searchRegex = new RegExp(sanitizedSearchTerm, "i");
 
-      console.log("Search Regex:", searchRegex);
-      console.log("Current User ID:", req.userId);
+      // console.log("Search Regex:", searchRegex);
+      // console.log("Current User ID:", req.userId);
 
       const contacts = await User.find({
         $and: [
@@ -33,11 +33,11 @@
         ],
       });
 
-      console.log("Contacts Found:", contacts);
+      // console.log("Contacts Found:", contacts);
 
       return res.status(200).json({ contacts });
     } catch (error) {
-      console.error("Error in searchContact:", error);
+      // console.error("Error in searchContact:", error);
       return res.status(500).send("Internal Server Error");
     }
   };
@@ -94,11 +94,11 @@
         },
       ]);
 
-      console.log("DM List:", contacts);
+      // console.log("DM List:", contacts);
 
       return res.status(200).json({ contacts });
     } catch (error) {
-      console.error("Error in getDMList:", error);
+      // console.error("Error in getDMList:", error);
       return res.status(500).send("Internal Server Error");
     }
   };

@@ -31,7 +31,7 @@ const updateProfile = async (req, res) => {
       image: userData.image,
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -70,12 +70,12 @@ const uploadImage = async (req, res) => {
 
     user.image = cloudinaryResponse.secure_url;
     await user.save();
-    console.log("Cloudinary link: ", cloudinaryResponse.secure_url);
+    // console.log("Cloudinary link: ", cloudinaryResponse.secure_url);
     return res.status(200).json({
       image: user.image,
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -85,7 +85,7 @@ const deleteImage = async (req, res) => {
     const userId = req.id;
     const user = await User.findById(userId);
     if(!user.image){
-      console.log("No image found");
+      // console.log("No image found");
       return res.status(400).json({error: 'No image found'});
     }
 
@@ -96,7 +96,7 @@ const deleteImage = async (req, res) => {
 
     return res.status(200).send("Profile image deleted");
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
