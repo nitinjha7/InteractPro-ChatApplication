@@ -18,7 +18,7 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(true); // Cold start alert
+  const [showAlert, setShowAlert] = useState(true);
   const { setUserInfo } = useStore();
   const navigate = useNavigate();
 
