@@ -94,6 +94,30 @@ const Auth = () => {
     }
   };
 
+  const handleDemoLogin = async () => {
+    setEmail("test@gmail.com");
+    setPassword("1234");
+
+    setLoading(true);
+    try {
+      const response = await apiClient.post(
+        "api/auth/login",
+        { email: "test@gmail.com", password: "1234" },
+        { withCredentials: true }
+      );
+
+      if (response.data.user?._id) {
+        setUserInfo(response.data.user);
+        toast.success("Logged in with demo account");
+        navigate(response.data.user.profileSetup ? "/chat" : "/profile");
+      }
+    } catch (error) {
+      toast.error("Demo login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -102,7 +126,6 @@ const Auth = () => {
       className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4"
     >
       <div className="w-full max-w-6xl h-[600px] flex rounded-2xl overflow-hidden shadow-2xl bg-gray-800/30 backdrop-blur-xl border border-gray-700">
-        {/* Left Side - Decorative */}
         <motion.div
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -124,7 +147,6 @@ const Auth = () => {
           </div>
         </motion.div>
 
-        {/* Right Side - Form */}
         <motion.div
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -132,7 +154,6 @@ const Auth = () => {
           className="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col justify-center"
         >
           <div className="max-w-md w-full mx-auto space-y-8">
-            {/* Backend Cold Start Alert */}
             <AnimatePresence>
               {showAlert && (
                 <motion.div
@@ -151,7 +172,7 @@ const Auth = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-            {/* Auth Toggle */}
+
             <div className="flex justify-center mb-8">
               <div className="relative bg-gray-800/50 p-1 rounded-xl flex justify-between items-center backdrop-blur-sm border border-gray-700 w-full max-w-xs">
                 <motion.div
@@ -182,8 +203,55 @@ const Auth = () => {
               </div>
             </div>
 
+            <AnimatePresence>
+              {isLogin && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25 }}
+                  onClick={handleDemoLogin}
+                  className="
+                    cursor-pointer
+                    rounded-xl
+                    p-4
+                    bg-gradient-to-r from-amber-500/20 to-yellow-500/20
+                    border border-amber-400/40
+                    backdrop-blur-md
+                    shadow-xl
+                    hover:bg-amber-500/20
+                    transition-all duration-300
+                    flex flex-col items-center justify-center
+                    text-center
+                  "
+                >
+                  <div className="select-none">
+                    <p className="text-base font-semibold text-amber-300">
+                      Demo Login
+                    </p>
+                    <p className="text-sm text-amber-200/80">
+                      Instant access
+                    </p>
+                  </div>
+
+                  <motion.div
+                    initial={{ scale: 0.95 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1.8,
+                      ease: "easeInOut",
+                      repeatType: "mirror",
+                    }}
+                    className="mt-2"
+                  >
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+
             <div className="space-y-6">
-              {/* Email Input */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300">
                   Email
@@ -200,7 +268,6 @@ const Auth = () => {
                 </div>
               </div>
 
-              {/* Password Input */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300">
                   Password
@@ -228,7 +295,6 @@ const Auth = () => {
                 </div>
               </div>
 
-              {/* Confirm Password (Sign Up only) */}
               <AnimatePresence mode="wait">
                 {!isLogin && (
                   <motion.div
@@ -255,7 +321,6 @@ const Auth = () => {
                 )}
               </AnimatePresence>
 
-              {/* Submit Button */}
               <Button
                 onClick={isLogin ? handleLogIn : handleSignUp}
                 disabled={loading}
@@ -272,34 +337,6 @@ const Auth = () => {
                   <span>{isLogin ? "Sign In" : "Create Account"}</span>
                 )}
               </Button>
-
-              {/* <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-700" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-gray-800 text-gray-400">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <Button
-                  variant="outline"
-                  className="bg-gray-800/30 border-gray-700 text-gray-300 hover:bg-gray-700/50"
-                >
-                  <Github className="h-4 w-4 mr-2" />
-                  Github
-                </Button>
-                <Button
-                  variant="outline"
-                  className="bg-gray-800/30 border-gray-700 text-gray-300 hover:bg-gray-700/50"
-                >
-                  <Twitter className="h-4 w-4 mr-2" />
-                  Twitter
-                </Button>
-              </div> */}
             </div>
           </div>
         </motion.div>
