@@ -39,7 +39,7 @@ InteractPro is a modern real-time chat application designed to enhance communica
 - [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/) - NoSQL database and ODM
 - [Socket.io](https://socket.io/) - Real-time bidirectional event-based communication
 - [JWT](https://jwt.io/) - Secure authentication
-- [Multer](https://www.npmjs.com/package/multer) - File uploads handling
+- [Cloudinary](https://cloudinary.com/) - File uploads handling
 
 ## Installation
 
