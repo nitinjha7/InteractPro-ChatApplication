@@ -9,13 +9,16 @@
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@trpc/server": "^11.18.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.6",
@@ -24,7 +27,9 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "superjson": "^2.2.6",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -36,6 +41,8 @@
     "@types/node": "^26.2.0",
     "nodemon": "^3.1.14",
     "prisma": "^6.19.3",
-    "typescript": "^7.0.2"
+    "supertest": "^7.2.2",
+    "typescript": "^7.0.2",
+    "vitest": "^2.1.9"
   }
 }
