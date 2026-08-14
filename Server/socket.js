@@ -24,6 +24,7 @@ const setupSocket = (server) => {
                 messageType: message.messageType,
                 content: message.content ?? null,
                 fileUrl: message.fileUrl ?? null,
+                language: message.language ?? null,
             },
             include: {
                 sender: true,

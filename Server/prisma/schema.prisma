@@ -32,6 +32,7 @@ model Message {
   messageType String   @map("message_type")
   content     String?
   fileUrl     String?  @map("file_url")
+  language    String?
   timeStamp   DateTime @default(now()) @map("time_stamp")
 
   sender    User  @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
