@@ -21,6 +21,9 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.5",
+    "@tanstack/react-query": "^5.101.4",
+    "@trpc/client": "^11.18.0",
+    "@trpc/react-query": "^11.18.0",
     "axios": "^1.7.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -39,6 +42,7 @@
     "react-tilt": "^1.0.2",
     "socket.io-client": "^4.8.1",
     "sonner": "^1.5.0",
+    "superjson": "^2.2.6",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.4"
