@@ -3,12 +3,12 @@ import request from 'supertest';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import { createRequire } from 'module';
-import { resetDb, cookieOf } from './helpers.js';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { resetDb, cookieOf } from './helpers.mjs';
+import { appRouter } from '../trpc/routers/index.ts';
+import { createContext } from '../trpc/context.ts';
 
 const require = createRequire(import.meta.url);
-const { createExpressMiddleware } = require('@trpc/server/adapters/express');
-const { appRouter } = require('../trpc/routers');
-const { createContext } = require('../trpc/context');
 const AuthRoute = require('../routes/AuthRoute');
 const ContactRoutes = require('../routes/ContactRoutes');
 const messageRoutes = require('../routes/messageRoutes');

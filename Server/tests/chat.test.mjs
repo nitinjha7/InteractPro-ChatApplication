@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
-import { makeApp, resetDb, cookieOf, prisma } from './helpers.js';
+import { makeApp, resetDb, cookieOf, prisma } from './helpers.mjs';
 
 const app = makeApp();
 const post = (path) => request(app).post('/trpc/' + path);

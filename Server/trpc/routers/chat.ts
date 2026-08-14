@@ -1,8 +1,9 @@
-const { z } = require('zod');
-const { router, protectedProcedure } = require('../trpc');
+import { z } from 'zod';
+import { router, protectedProcedure } from '../trpc';
+
 const { toUser, toMessage } = require('../../lib/serialize');
 
-const chatRouter = router({
+export const chatRouter = router({
   searchContacts: protectedProcedure
     .input(z.object({ searchTerm: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -35,7 +36,7 @@ const chatRouter = router({
     }),
 
   getDmList: protectedProcedure.query(async ({ ctx }) => {
-    const rows = await ctx.prisma.$queryRaw`
+    const rows = (await ctx.prisma.$queryRaw`
       SELECT DISTINCT ON (contact_id)
         contact_id,
         time_stamp AS "lastMessageTime"
@@ -48,7 +49,7 @@ const chatRouter = router({
       ) AS conversations
       WHERE contact_id IS NOT NULL
       ORDER BY contact_id, time_stamp DESC
-    `;
+    `) as Array<{ contact_id: string; lastMessageTime: Date }>;
 
     if (rows.length === 0) return { contacts: [] };
 
@@ -70,11 +71,9 @@ const chatRouter = router({
           image: user.image,
         };
       })
-      .filter(Boolean)
-      .sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
+      .filter((c) => c !== null)
+      .sort((a, b) => new Date(b.lastMessageTime).getTime() - new Date(a.lastMessageTime).getTime());
 
     return { contacts };
   }),
 });
-
-module.exports = { chatRouter };

@@ -1,18 +1,20 @@
-const { z } = require('zod');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { TRPCError } = require('@trpc/server');
-const { router, publicProcedure, protectedProcedure } = require('../trpc');
+import { z } from 'zod';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { TRPCError } from '@trpc/server';
+import type { Response } from 'express';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
+
 const { toUser } = require('../../lib/serialize');
 
 const cookieOptions = {
   httpOnly: true,
   secure: true,
   sameSite: 'none',
-};
+} as const;
 
-const setAuthCookie = (res, user) => {
-  const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_KEY, {
+const setAuthCookie = (res: Response, user: { id: string; email: string }) => {
+  const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_KEY as string, {
     expiresIn: '3d',
   });
   res.cookie('token', token, cookieOptions);
@@ -23,7 +25,7 @@ const credentials = z.object({
   password: z.string().min(8),
 });
 
-const authRouter = router({
+export const authRouter = router({
   signup: publicProcedure.input(credentials).mutation(async ({ ctx, input }) => {
     const existing = await ctx.prisma.user.findUnique({ where: { email: input.email } });
     if (existing) {
@@ -72,5 +74,3 @@ const authRouter = router({
       return { user: toUser(user) };
     }),
 });
-
-module.exports = { authRouter };

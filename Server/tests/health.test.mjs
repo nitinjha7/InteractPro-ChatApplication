@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import { makeApp } from './helpers.js';
+import { makeApp } from './helpers.mjs';
 
 describe('trpc bootstrap', () => {
   it('answers the health query', async () => {
