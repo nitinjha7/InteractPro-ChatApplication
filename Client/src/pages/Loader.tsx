@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MessageSquare, Server, Clock, Zap } from "lucide-react";
 
 const LoadingScreen = () => {
@@ -49,7 +49,7 @@ const LoadingScreen = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-indigo-900/20 animate-[pulse_4s_ease-in-out_infinite]" />
 
       {/* Floating particles */}
-      {[...Array(20)].map((_, i) => (
+      {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={i}
           className="absolute bg-purple-500/20 rounded-full w-2 h-2"
