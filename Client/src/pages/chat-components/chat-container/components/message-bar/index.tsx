@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Smile, Paperclip, Send, Image, Mic, Code } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 import { useStore } from "@/store/store";
@@ -24,11 +24,12 @@ const MessageBar = () => {
   const [message, setMessage] = useState("");
   const [isCodeMode, setIsCodeMode] = useState(false);
   const [language, setLanguage] = useState("javascript");
-  const emojiPickerRef = useRef(null);
-  const editorContainerRef = useRef(null); // Ref for the code editor container
-  const { selectedChatType, selectedChatData, userInfo } = useStore();
+  const emojiPickerRef = useRef<HTMLDivElement | null>(null);
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
+  const selectedChatData = useStore((s) => s.selectedChatData);
+  const userInfo = useStore((s) => s.userInfo);
   const socket = useSocket();
-  const fileInputRef = useRef();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const languageOptions = [
     { value: "javascript", label: "JavaScript" },
@@ -40,18 +41,18 @@ const MessageBar = () => {
     { value: "go", label: "Go" },
   ];
 
-  const handleEmojiClick = (emojiData) => {
+  const handleEmojiClick = (emojiData: { emoji: string }) => {
     setMessage((prevMessage) => prevMessage + emojiData.emoji);
   };
 
-  const handleClickOutside = (e) => {
-    if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
+  const handleClickOutside = (e: MouseEvent) => {
+    if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
       setEmojiPickerOpen(false);
     }
   };
 
   const handleSendMessage = () => {
-    if (socket && message.trim() !== "") {
+    if (socket && message.trim() !== "" && selectedChatData && userInfo) {
       socket.emit("sendMessage", {
         sender: userInfo._id,
         recipient: selectedChatData._id,
@@ -131,7 +132,7 @@ const MessageBar = () => {
                       className="shadow-2xl"
                     >
                       <EmojiPicker
-                        theme="dark"
+                        theme={"dark" as never}
                         onEmojiClick={handleEmojiClick}
                         autoFocusSearch={false}
                         skinTonesDisabled
@@ -168,13 +169,13 @@ const MessageBar = () => {
               type="file"
               className="hidden"
               ref={fileInputRef}
-              onChange={(e) => console.log(e.target.files[0])}
+              onChange={(e) => console.log(e.target.files?.[0])}
             />
             <Button
               variant="ghost"
               size="icon"
               className="text-gray-400 hover:text-white hover:bg-[#3a3b3e] w-9 h-9 rounded-lg"
-              onClick={() => fileInputRef.current.click()}
+              onClick={() => fileInputRef.current?.click()}
             >
               <Paperclip size={20} />
             </Button>
@@ -195,7 +196,7 @@ const MessageBar = () => {
                 <Editor
                   value={message}
                   onValueChange={setMessage}
-                  highlight={(code) => highlight(code, languages[language])}
+                  highlight={(code: string) => highlight(code, (languages[language] || languages.javascript)!, language)}
                   padding={12}
                   style={{
                     fontFamily: '"JetBrains Mono", monospace',

@@ -1,25 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { useStore } from "@/store/store";
-import apiClient from "@/lib/apiClient";
+import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
 import { highlight, languages } from "prismjs";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
 import "prismjs/themes/prism-tomorrow.css";
+import type { Message } from "@/types";
 
 const MessageContainer = () => {
-  const messagesEndRef = useRef(null);
-  const containerRef = useRef(null);
-  const [copiedMessageId, setCopiedMessageId] = useState(null); // Track copied message ID
-  const {
-    selectedChatData,
-    userInfo,
-    selectedChatType,
-    selectedChatMessages,
-    setSelectedChatMessages,
-  } = useStore();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const selectedChatData = useStore((s) => s.selectedChatData);
+  const userInfo = useStore((s) => s.userInfo);
+  const selectedChatType = useStore((s) => s.selectedChatType);
+  const selectedChatMessages = useStore((s) => s.selectedChatMessages);
+  const setSelectedChatMessages = useStore((s) => s.setSelectedChatMessages);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -31,45 +30,33 @@ const MessageContainer = () => {
     scrollToBottom();
   }, [selectedChatMessages]);
 
-  useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const res = await apiClient.post(
-          "/api/message/get-messages",
-          { id: selectedChatData._id },
-          { withCredentials: true }
-        );
-        if (res.data.chat) {
-          setSelectedChatMessages(res.data.chat);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (selectedChatData && selectedChatType === "dm") {
-      getMessages();
-    }
-  }, [selectedChatData, selectedChatType, setSelectedChatMessages]);
+  const { data } = trpc.chat.getMessages.useQuery(
+    { contactId: selectedChatData?._id ?? "" },
+    { enabled: !!selectedChatData && selectedChatType === "dm" }
+  );
 
-  const handleCopy = (messageId, content) => {
+  useEffect(() => {
+    if (data?.chat) setSelectedChatMessages(data.chat as never);
+  }, [data, setSelectedChatMessages]);
+
+  const handleCopy = (messageId: string, content: string) => {
     navigator.clipboard.writeText(content);
     setCopiedMessageId(messageId);
 
-    // Remove the copied status after 2 seconds
     setTimeout(() => {
       setCopiedMessageId(null);
     }, 2000);
   };
 
   const renderMessages = () => {
-    let lastDate = null;
-    return selectedChatMessages.map((message, index) => {
+    let lastDate: string | null = null;
+    return selectedChatMessages.map((message: Message, index: number) => {
       const messageDate = moment(message.timeStamp).format("DD-MM-YYYY");
       const showDate = lastDate !== messageDate;
       lastDate = messageDate;
 
-      const isSender = message.sender === userInfo._id;
-      const isCopied = copiedMessageId === message._id; // Check if the message is copied
+      const isSender = message.sender === userInfo?._id;
+      const isCopied = copiedMessageId === message._id;
 
       return (
         <motion.div
@@ -108,7 +95,7 @@ const MessageContainer = () => {
                     </span>
                     <div className="relative">
                       <button
-                        onClick={() => handleCopy(message._id, message.content)}
+                        onClick={() => handleCopy(message._id, message.content ?? "")}
                         className="text-xs text-gray-400 hover:text-white transition-colors"
                       >
                         Copy
@@ -124,8 +111,8 @@ const MessageContainer = () => {
                     <code
                       dangerouslySetInnerHTML={{
                         __html: highlight(
-                          message.content,
-                          languages[message.language || "javascript"],
+                          message.content ?? "",
+                          (languages[message.language || "javascript"] || languages.javascript)!,
                           message.language || "javascript"
                         ),
                       }}

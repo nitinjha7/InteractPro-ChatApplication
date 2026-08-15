@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Dialog,
@@ -9,32 +9,21 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import apiClient from "@/lib/apiClient";
+import { trpc } from "@/lib/trpc";
+import type { User } from "@/types";
 
-const DmDialog = ({ open, onOpenChange, onSelectContact }) => {
-  const [searchedContacts, setSearchedContacts] = useState([]);
-
-  const searchContact = async (searchTerm) => {
-    try {
-      const response = await apiClient.post(
-        "api/contact/search",
-        { searchTerm },
-        { withCredentials: true }
-      );
-      if (response.status === 200 && response.data.contacts) {
-        setSearchedContacts(response.data.contacts);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // When the dialog opens, load contacts (you can adjust this behavior)
-  useEffect(() => {
-    if (open) {
-      searchContact("");
-    }
-  }, [open]);
+const DmDialog = ({
+  open,
+  onOpenChange,
+  onSelectContact,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSelectContact: (contact: User) => void;
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data } = trpc.chat.searchContacts.useQuery({ searchTerm }, { enabled: open });
+  const searchedContacts = (data?.contacts ?? []) as User[];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -54,13 +43,14 @@ const DmDialog = ({ open, onOpenChange, onSelectContact }) => {
           <Input
             className="pl-10 bg-dark-accent/30 border-dark-accent/30 text-dark-text placeholder:text-dark-muted"
             placeholder="Search users..."
-            onChange={(e) => searchContact(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         <ScrollArea className="mt-4 max-h-[300px] pr-4">
           <AnimatePresence>
-            {searchedContacts.map((contact, index) => (
+            {searchedContacts.map((contact: User, index: number) => (
               <motion.div
                 key={contact._id}
                 initial={{ opacity: 0, y: 10 }}
@@ -69,8 +59,8 @@ const DmDialog = ({ open, onOpenChange, onSelectContact }) => {
                 transition={{ delay: index * 0.1 }}
                 onClick={() => {
                   onSelectContact(contact);
-                  onOpenChange(false); // Close dialog after selecting
-                  setSearchedContacts([]);
+                  onOpenChange(false);
+                  setSearchTerm("");
                 }}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-dark-accent/30 cursor-pointer group transition-colors backdrop-blur-sm"
               >

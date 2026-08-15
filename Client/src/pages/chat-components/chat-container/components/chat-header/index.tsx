@@ -1,4 +1,3 @@
-import React from "react";
 import { useStore } from "@/store/store";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Phone, Video, MoreVertical, X } from "lucide-react";
@@ -12,7 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const ChatHeader = () => {
-  const { closeChat, selectedChatData } = useStore();
+  const closeChat = useStore((s) => s.closeChat);
+  const selectedChatData = useStore((s) => s.selectedChatData);
   const imageUrl = selectedChatData?.image ? selectedChatData.image : null;
 
   return (

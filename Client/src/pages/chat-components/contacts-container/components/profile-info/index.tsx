@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import {
   Tooltip,
@@ -7,33 +6,25 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { LogOut, Settings, UserCircle2 } from "lucide-react";
-import apiClient from "@/lib/apiClient";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "@/store/store";
+import { trpc } from "@/lib/trpc";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 const ProfileInfo = () => {
   const navigate = useNavigate();
-  const { userInfo, setUserInfo } = useStore();
+  const userInfo = useStore((s) => s.userInfo);
+  const clearUserInfo = useStore((s) => s.clearUserInfo);
 
-  const handleLogOut = async () => {
-    try {
-      const request = await apiClient.post(
-        "/api/auth/logout",
-        {},
-        { withCredentials: true }
-      );
-      if (request.status === 200) {
-        navigate("/login");
-        setUserInfo(null);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const logout = trpc.auth.logout.useMutation({
+    onSuccess: () => {
+      clearUserInfo();
+      navigate("/auth");
+    },
+  });
 
-  const imageUrl = userInfo.image? userInfo.image : null;
+  const imageUrl = userInfo?.image ? userInfo.image : null;
 
   return (
     <motion.div
@@ -103,7 +94,7 @@ const ProfileInfo = () => {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-dark-muted hover:text-red-400 hover:bg-dark-accent/30 transition-colors"
-                onClick={handleLogOut}
+                onClick={() => logout.mutate()}
               >
                 <LogOut size={18} />
               </Button>

@@ -1,30 +1,28 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { useStore } from "@/store/store";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { DmContact } from "@/types";
 
 const DMList = () => {
-  const {
-    selectedChatData,
-    setSelectedChatData,
-    dmContacts,
-    setSelectedChatMessage,
-    setSelectedChatType,
-  } = useStore();
+  const selectedChatData = useStore((s) => s.selectedChatData);
+  const setSelectedChatData = useStore((s) => s.setSelectedChatData);
+  const setSelectedChatMessages = useStore((s) => s.setSelectedChatMessages);
+  const setSelectedChatType = useStore((s) => s.setSelectedChatType);
+  const dmContacts = useStore((s) => s.dmContacts);
 
-  const handleClick = (contact) => {
+  const handleClick = (contact: DmContact) => {
+    if (selectedChatData && selectedChatData._id !== contact._id) {
+      setSelectedChatMessages([]);
+    }
     setSelectedChatData(contact);
     setSelectedChatType("dm");
-    if (selectedChatData && selectedChatData._id !== contact._id) {
-      setSelectedChatMessage([]);
-    }
   };
 
   return (
     <div className="space-y-1">
-      {dmContacts.map((contact, index) => {
+      {dmContacts.map((contact: DmContact, index: number) => {
         const imageUrl = contact.image ? contact.image : null;
         const isSelected = selectedChatData?._id === contact._id;
 
@@ -64,9 +62,7 @@ const DMList = () => {
                   ? `${contact.firstName} ${contact.lastName}`
                   : contact.email}
               </h4>
-              <p className="text-sm text-dark-muted truncate">
-                {contact.status || "Available"}
-              </p>
+              <p className="text-sm text-dark-muted truncate">Available</p>
             </div>
           </motion.div>
         );

@@ -1,32 +1,20 @@
-import React from "react";
+import { useEffect } from "react";
 import NewDm from "./components/new-dm";
 import ProfileInfo from "./components/profile-info";
-import apiClient from "@/lib/apiClient";
-import { useEffect } from "react";
 import { useStore } from "@/store/store";
+import { trpc } from "@/lib/trpc";
 import DMList from "./components/dm-list/DMList";
 
 import { motion } from "framer-motion";
-import { MessageSquare, Users } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 const ContactsContainer = () => {
-  const { dmContacts, setDmContacts } = useStore();
+  const setDmContacts = useStore((s) => s.setDmContacts);
+  const { data } = trpc.chat.getDmList.useQuery();
 
   useEffect(() => {
-    const getDMContacts = async () => {
-      try {
-        const response = await apiClient.get("/api/contact/get-dm-list", {
-          withCredentials: true,
-        });
-        if (response.data.contacts) {
-          setDmContacts(response.data.contacts);
-        }
-      } catch (error) {
-        console.error("Error in getDMContacts:", error);
-      }
-    };
-    getDMContacts();
-  }, []);
+    if (data?.contacts) setDmContacts(data.contacts as never);
+  }, [data, setDmContacts]);
 
   return (
     <motion.div
@@ -60,18 +48,6 @@ const ContactsContainer = () => {
           </motion.div>
           <DMList />
         </div>
-
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="px-4 mb-4"
-        >
-          <div className="flex items-center gap-2 text-dark-text/80 mb-3">
-            <Users size={18} className="text-violet-500" />
-            <span className="text-sm font-medium">Channels</span>
-          </div>
-        </motion.div> */}
       </div>
 
       <motion.div

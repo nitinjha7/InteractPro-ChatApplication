@@ -1,4 +1,3 @@
-import React from 'react'
 import ChatHeader from './components/chat-header'
 import MessageContainer from './components/message-container'
 import MessageBar from './components/message-bar'

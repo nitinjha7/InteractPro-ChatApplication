@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Tooltip,
@@ -7,14 +7,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { UserPlus } from "lucide-react";
-import DmDialog from "@/pages/chat-components/contacts-dialog-box/index.jsx";
+import DmDialog from "@/pages/chat-components/contacts-dialog-box";
 import { useStore } from "@/store/store";
+import type { User } from "@/types";
 
 const NewDm = () => {
   const [openNewContactModal, setOpenNewContactModal] = useState(false);
-  const { setSelectedChatData, setSelectedChatType } = useStore();
+  const setSelectedChatData = useStore((s) => s.setSelectedChatData);
+  const setSelectedChatType = useStore((s) => s.setSelectedChatType);
 
-  const handleSelectContact = (contact) => {
+  const handleSelectContact = (contact: User) => {
     setSelectedChatData(contact);
     setSelectedChatType("dm");
   };
