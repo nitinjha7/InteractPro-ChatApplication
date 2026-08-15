@@ -13,7 +13,7 @@ const DMList = () => {
   const dmContacts = useStore((s) => s.dmContacts);
 
   const handleClick = (contact: DmContact) => {
-    if (selectedChatData && selectedChatData._id !== contact._id) {
+    if (selectedChatData && selectedChatData.id !== contact.id) {
       setSelectedChatMessages([]);
     }
     setSelectedChatData(contact);
@@ -24,11 +24,11 @@ const DMList = () => {
     <div className="space-y-1">
       {dmContacts.map((contact: DmContact, index: number) => {
         const imageUrl = contact.image ? contact.image : null;
-        const isSelected = selectedChatData?._id === contact._id;
+        const isSelected = selectedChatData?.id === contact.id;
 
         return (
           <motion.div
-            key={contact._id}
+            key={contact.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}

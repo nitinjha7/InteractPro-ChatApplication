@@ -11,7 +11,7 @@ const makeUser = async (email, firstName) => {
   const res = await post('auth.signup').send({ json: { email, password: 'pass1234' } });
   const cookie = cookieOf(res);
   await post('auth.updateProfile').set('Cookie', cookie).send({ json: { firstName, lastName: 'Test' } });
-  return { cookie, id: res.body.result.data.json.user._id };
+  return { cookie, id: res.body.result.data.json.user.id };
 };
 
 beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('chat.searchContacts', () => {
     const contacts = res.body.result.data.json.contacts;
     expect(contacts).toHaveLength(1);
     expect(contacts[0].firstName).toBe('Bob');
-    expect(contacts[0]._id).toBeTruthy();
+    expect(contacts[0].id).toBeTruthy();
     expect(contacts[0].password).toBeUndefined();
   });
 
@@ -63,7 +63,7 @@ describe('chat.getMessages', () => {
     expect(chat[0].content).toBe('first');
     expect(typeof chat[0].sender).toBe('string');
     expect(typeof chat[0].recipient).toBe('string');
-    expect(chat[0]._id).toBeTruthy();
+    expect(chat[0].id).toBeTruthy();
   });
 
   it('does not leak a conversation the caller is not part of', async () => {

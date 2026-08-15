@@ -31,7 +31,7 @@ const MessageContainer = () => {
   }, [selectedChatMessages]);
 
   const { data } = trpc.chat.getMessages.useQuery(
-    { contactId: selectedChatData?._id ?? "" },
+    { contactId: selectedChatData?.id ?? "" },
     { enabled: !!selectedChatData && selectedChatType === "dm" }
   );
 
@@ -55,12 +55,12 @@ const MessageContainer = () => {
       const showDate = lastDate !== messageDate;
       lastDate = messageDate;
 
-      const isSender = message.sender === userInfo?._id;
-      const isCopied = copiedMessageId === message._id;
+      const isSender = message.sender === userInfo?.id;
+      const isCopied = copiedMessageId === message.id;
 
       return (
         <motion.div
-          key={message._id || index}
+          key={message.id || index}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
@@ -95,7 +95,7 @@ const MessageContainer = () => {
                     </span>
                     <div className="relative">
                       <button
-                        onClick={() => handleCopy(message._id, message.content ?? "")}
+                        onClick={() => handleCopy(message.id, message.content ?? "")}
                         className="text-xs text-gray-400 hover:text-white transition-colors"
                       >
                         Copy

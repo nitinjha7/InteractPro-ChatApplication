@@ -10,11 +10,11 @@ beforeEach(async () => {
 });
 
 describe('auth.signup', () => {
-  it('creates a user and returns _id without the password', async () => {
+  it('creates a user and returns id without the password', async () => {
     const res = await call('auth.signup').send({ json: { email: 'a@t.com', password: 'pass1234' } });
     expect(res.status).toBe(200);
     const user = res.body.result.data.json.user;
-    expect(user._id).toBeTruthy();
+    expect(user.id).toBeTruthy();
     expect(user.password).toBeUndefined();
     expect(user.email).toBe('a@t.com');
   });
@@ -51,7 +51,7 @@ describe('auth.login', () => {
   it('accepts the right password', async () => {
     const res = await call('auth.login').send({ json: { email: 'a@t.com', password: 'pass1234' } });
     expect(res.status).toBe(200);
-    expect(res.body.result.data.json.user._id).toBeTruthy();
+    expect(res.body.result.data.json.user.id).toBeTruthy();
   });
 
   it('rejects the wrong password', async () => {

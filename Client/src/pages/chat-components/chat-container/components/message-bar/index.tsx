@@ -54,8 +54,8 @@ const MessageBar = () => {
   const handleSendMessage = () => {
     if (socket && message.trim() !== "" && selectedChatData && userInfo) {
       socket.emit("sendMessage", {
-        sender: userInfo._id,
-        recipient: selectedChatData._id,
+        sender: userInfo.id,
+        recipient: selectedChatData.id,
         content: message.trim(),
         messageType: isCodeMode ? "code" : "text",
         language: isCodeMode ? language : undefined,

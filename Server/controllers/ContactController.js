@@ -56,7 +56,7 @@ const getDMList = async (req, res, next) => {
         const user = usersById.get(row.contact_id);
         if (!user) return null;
         return {
-          _id: user.id,
+          id: user.id,
           lastMessageTime: row.lastMessageTime,
           firstName: user.firstName,
           lastName: user.lastName,

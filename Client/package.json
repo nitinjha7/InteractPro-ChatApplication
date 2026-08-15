@@ -24,7 +24,6 @@
     "@tanstack/react-query": "^5.101.4",
     "@trpc/client": "^11.18.0",
     "@trpc/react-query": "^11.18.0",
-    "axios": "^1.7.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "emoji-picker-react": "^4.12.0",

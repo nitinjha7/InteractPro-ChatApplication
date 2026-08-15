@@ -1,5 +1,5 @@
 export interface User {
-  _id: string;
+  id: string;
   email: string;
   firstName: string | null;
   lastName: string | null;
@@ -9,7 +9,7 @@ export interface User {
 }
 
 export interface Message {
-  _id: string;
+  id: string;
   sender: string | User;
   recipient: string | User;
   messageType: 'text' | 'file' | 'code';
@@ -20,7 +20,7 @@ export interface Message {
 }
 
 export interface DmContact {
-  _id: string;
+  id: string;
   lastMessageTime: string;
   firstName: string | null;
   lastName: string | null;

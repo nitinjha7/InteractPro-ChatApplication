@@ -42,9 +42,9 @@ export const useStore = create<Store>((set, get) => ({
         ...get().selectedChatMessages,
         {
           ...message,
-          sender: typeof message.sender === 'string' ? message.sender : message.sender._id,
+          sender: typeof message.sender === 'string' ? message.sender : message.sender.id,
           recipient:
-            typeof message.recipient === 'string' ? message.recipient : message.recipient._id,
+            typeof message.recipient === 'string' ? message.recipient : message.recipient.id,
         },
       ],
     }),

@@ -7,7 +7,7 @@ const SocketContext = createContext<Socket | null>(null);
 
 export const useSocket = () => useContext(SocketContext);
 
-const idOf = (v: string | User) => (typeof v === 'string' ? v : v._id);
+const idOf = (v: string | User) => (typeof v === 'string' ? v : v.id);
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const socketRef = useRef<Socket | null>(null);
@@ -20,7 +20,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     const s = io(import.meta.env.VITE_APP_SERVER_URL, {
       withCredentials: true,
-      query: { userId: userInfo._id },
+      query: { userId: userInfo.id },
     });
     socketRef.current = s;
     setSocket(s);
@@ -30,8 +30,8 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       if (!selectedChatType || !selectedChatData) return;
 
       const involved =
-        selectedChatData._id === idOf(message.sender) ||
-        selectedChatData._id === idOf(message.recipient);
+        selectedChatData.id === idOf(message.sender) ||
+        selectedChatData.id === idOf(message.recipient);
 
       if (involved) addMessage(message);
     });
