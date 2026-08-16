@@ -21,6 +21,8 @@ model User {
 
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+  ownedSessions       CodeSession[]        @relation("OwnedSessions")
+  sessionParticipants SessionParticipant[] @relation("SessionParticipants")
 
   @@map("users")
 }
@@ -42,4 +44,37 @@ model Message {
   @@index([recipientId])
   @@index([timeStamp])
   @@map("messages")
+}
+
+model CodeSession {
+  id        String   @id @default(cuid())
+  name      String
+  language  String
+  content   String   @default("")
+  snapshot  Bytes?
+  ownerId   String   @map("owner_id")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner        User                 @relation("OwnedSessions", fields: [ownerId], references: [id], onDelete: Cascade)
+  participants SessionParticipant[]
+
+  @@index([ownerId])
+  @@map("code_sessions")
+}
+
+model SessionParticipant {
+  id        String   @id @default(cuid())
+  sessionId String   @map("session_id")
+  userId    String   @map("user_id")
+  color     String
+  joinedAt  DateTime @default(now()) @map("joined_at")
+
+  session CodeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User        @relation("SessionParticipants", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@map("session_participants")
 }

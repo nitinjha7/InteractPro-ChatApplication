@@ -17,6 +17,8 @@ export const makeApp = () => {
 };
 
 export const resetDb = async () => {
+  await prisma.sessionParticipant.deleteMany();
+  await prisma.codeSession.deleteMany();
   await prisma.message.deleteMany();
   await prisma.user.deleteMany();
 };
