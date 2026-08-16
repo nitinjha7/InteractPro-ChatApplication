@@ -6,6 +6,8 @@ import Auth from '@/pages/Auth';
 import Chat from '@/pages/Chat';
 import Profile from '@/pages/Profile';
 import Loader from '@/pages/Loader';
+import CodeSession from '@/pages/CodeSession';
+import CodeSessionList from '@/pages/CodeSessionList';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const userInfo = useStore((s) => s.userInfo);
@@ -57,6 +59,22 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/session"
+          element={
+            <ProtectedRoute>
+              <CodeSessionList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/session/:sessionId"
+          element={
+            <ProtectedRoute>
+              <CodeSession />
             </ProtectedRoute>
           }
         />

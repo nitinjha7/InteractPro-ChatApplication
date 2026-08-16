@@ -6,9 +6,12 @@ import { trpc } from "@/lib/trpc";
 import DMList from "./components/dm-list/DMList";
 
 import { motion } from "framer-motion";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Code2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const ContactsContainer = () => {
+  const navigate = useNavigate();
   const setDmContacts = useStore((s) => s.setDmContacts);
   const { data } = trpc.chat.getDmList.useQuery();
 
@@ -46,6 +49,14 @@ const ContactsContainer = () => {
             </div>
             <NewDm />
           </motion.div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/session')}
+            className="mb-3 w-full justify-start text-dark-muted hover:text-blue-400"
+          >
+            <Code2 className="mr-2 h-4 w-4" /> Code sessions
+          </Button>
           <DMList />
         </div>
       </div>
