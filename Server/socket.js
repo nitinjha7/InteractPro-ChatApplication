@@ -60,6 +60,8 @@ const setupSocket = (server) => {
             console.log(`User disconnected: ${userId}`);
         });
     })
+
+    return io;
 };
 
 module.exports = setupSocket;

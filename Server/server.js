@@ -33,7 +33,10 @@ app.use('/api/contact', ContactRoutes);
 app.use('/api/message', messageRoutes);
 
 const server = http.createServer(app);
-setupSocket(server);
+const io = setupSocket(server);
+
+// yjs module is esm so that only one copy of yjs is ever loaded
+import('./yjs/index.mjs').then(({ setupYjs }) => setupYjs(io));
 
 dbConnect();
 
