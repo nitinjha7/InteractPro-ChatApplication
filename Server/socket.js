@@ -41,6 +41,10 @@ const setupSocket = (server) => {
         if(recipientSocketId){
             io.to(recipientSocketId).emit("receiveMessage", messageData);
         }
+
+        import('./lib/ai/ingest.mjs')
+            .then(({ ingestMessage }) => ingestMessage(created))
+            .catch(() => {});
     }
 
     io.on('connection', (socket) => {
