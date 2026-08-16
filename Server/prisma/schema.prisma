@@ -35,6 +35,7 @@ model Message {
   content     String?
   fileUrl     String?  @map("file_url")
   language    String?
+  embedding   Embedding?
   timeStamp   DateTime @default(now()) @map("time_stamp")
 
   sender    User  @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
@@ -77,4 +78,16 @@ model SessionParticipant {
   @@unique([sessionId, userId])
   @@index([sessionId])
   @@map("session_participants")
+}
+
+model Embedding {
+  id        String   @id @default(cuid())
+  messageId String   @unique @map("message_id")
+  content   String
+  embedding Unsupported("vector(768)")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("embeddings")
 }

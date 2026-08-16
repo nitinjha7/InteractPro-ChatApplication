@@ -17,6 +17,7 @@ export const makeApp = () => {
 };
 
 export const resetDb = async () => {
+  await prisma.$executeRaw`DELETE FROM embeddings`;
   await prisma.sessionParticipant.deleteMany();
   await prisma.codeSession.deleteMany();
   await prisma.message.deleteMany();
