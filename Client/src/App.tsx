@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { trpc } from '@/lib/trpc';
 import { useStore } from '@/store/store';
 import Auth from '@/pages/Auth';
@@ -11,7 +11,12 @@ import CodeSessionList from '@/pages/CodeSessionList';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const userInfo = useStore((s) => s.userInfo);
-  return userInfo ? <>{children}</> : <Navigate to="/auth" replace />;
+  const location = useLocation();
+  return userInfo ? (
+    <>{children}</>
+  ) : (
+    <Navigate to="/auth" replace state={{ from: location.pathname }} />
+  );
 };
 
 const AuthRoute = ({ children }: { children: React.ReactNode }) => {
@@ -33,7 +38,12 @@ const App = () => {
     if (data?.user) setUserInfo(data.user as never);
   }, [data, setUserInfo]);
 
-  if (isLoading && !userInfo && !isError) return <Loader />;
+  // the query resolving and the store catching up happen on different
+  // renders (setUserInfo only runs after this effect flushes), so gate on
+  // both — otherwise ProtectedRoute sees userInfo still undefined for one
+  // render and bounces to /auth before the store has a chance to update
+  const authPending = isLoading || (!!data?.user && !userInfo);
+  if (authPending && !isError) return <Loader />;
 
   return (
     <BrowserRouter>

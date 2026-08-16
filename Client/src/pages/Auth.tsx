@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -16,10 +16,16 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const setUserInfo = useStore((s) => s.setUserInfo);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from;
 
   const onSuccess = (data: { user: { profileSetup: boolean } }) => {
     setUserInfo(data.user as never);
-    navigate(data.user.profileSetup ? '/chat' : '/profile');
+    if (!data.user.profileSetup) {
+      navigate('/profile');
+      return;
+    }
+    navigate(from && from !== '/auth' ? from : '/chat');
   };
 
   const login = trpc.auth.login.useMutation({

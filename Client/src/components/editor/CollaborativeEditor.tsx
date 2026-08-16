@@ -59,6 +59,10 @@ export default function CollaborativeEditor({ sessionId, language, userName, use
       provider.awareness.off('change', onAwareness);
       provider.off('sync', onStatus);
       (provider as any).off('status', onStatus);
+      // clear our own awareness entry immediately instead of waiting on the
+      // server's ~30s stale-client timeout, which was leaving ghost peers
+      // in the "N people here" count after every navigation/reload
+      provider.awareness.setLocalState(null);
       view.destroy();
       provider.destroy();
       doc.destroy();
