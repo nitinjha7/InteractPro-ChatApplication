@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { useStore } from "@/store/store";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2, Phone, Video, MoreVertical, X } from "lucide-react";
+import { UserCircle2, Phone, Video, MoreVertical, X, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,17 +10,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import AskPanel from "@/components/ai/AskPanel";
 
 const ChatHeader = () => {
   const closeChat = useStore((s) => s.closeChat);
   const selectedChatData = useStore((s) => s.selectedChatData);
   const imageUrl = selectedChatData?.image ? selectedChatData.image : null;
+  const [askOpen, setAskOpen] = useState(false);
 
   return (
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="h-[70px] border-b border-dark-accent/10 bg-dark-secondary/80 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-50"
+      className="relative h-[70px] border-b border-dark-accent/10 bg-dark-secondary/80 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-50"
     >
       <div className="flex items-center gap-4">
         <div className="relative">
@@ -48,6 +51,15 @@ const ChatHeader = () => {
       </div>
 
       <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setAskOpen((v) => !v)}
+          title="Ask your chat history"
+          className="text-dark-muted hover:text-blue-400 hover:bg-dark-accent/20 w-9 h-9 rounded-full"
+        >
+          <Sparkles size={18} />
+        </Button>
         <Button
           variant="ghost"
           size="icon"
@@ -96,6 +108,8 @@ const ChatHeader = () => {
           <X size={18} />
         </Button>
       </div>
+
+      <AskPanel open={askOpen} onClose={() => setAskOpen(false)} />
     </motion.div>
   );
 };
