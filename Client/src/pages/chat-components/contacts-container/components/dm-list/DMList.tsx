@@ -34,14 +34,13 @@ const DMList = () => {
             transition={{ delay: index * 0.1 }}
             className={cn(
               "flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all",
-              "hover:bg-dark-accent/30 group backdrop-blur-sm",
-              isSelected &&
-                "bg-dark-accent/40 hover:bg-dark-accent/40 shadow-inner-glow"
+              "hover:bg-secondary group",
+              isSelected && "bg-secondary hover:bg-secondary"
             )}
             onClick={() => handleClick(contact)}
           >
             <div className="relative">
-              <Avatar className="h-10 w-10 ring-2 ring-dark-accent/30 transition-transform group-hover:scale-105">
+              <Avatar className="h-10 w-10 ring-2 ring-border transition-transform group-hover:scale-105">
                 {imageUrl ? (
                   <AvatarImage
                     src={imageUrl}
@@ -50,19 +49,19 @@ const DMList = () => {
                     }`}
                   />
                 ) : (
-                  <UserCircle2 className="text-dark-muted" />
+                  <UserCircle2 className="text-muted-foreground" />
                 )}
               </Avatar>
-              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-dark-primary shadow-glow" />
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full ring-2 ring-card" />
             </div>
 
             <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-dark-text truncate group-hover:text-blue-400 transition-colors">
+              <h4 className="font-medium text-foreground truncate group-hover:text-primary transition-colors">
                 {contact.firstName && contact.lastName
                   ? `${contact.firstName} ${contact.lastName}`
                   : contact.email}
               </h4>
-              <p className="text-sm text-dark-muted truncate">Available</p>
+              <p className="text-sm text-muted-foreground truncate">Available</p>
             </div>
           </motion.div>
         );

@@ -30,10 +30,10 @@ const ProfileInfo = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-4 flex items-center gap-4 bg-gradient-to-r from-dark-accent/10 to-transparent backdrop-blur-sm"
+      className="p-4 flex items-center gap-4"
     >
       <motion.div whileHover={{ scale: 1.05 }} className="relative">
-        <Avatar className="h-10 w-10 ring-2 ring-blue-500/30 transition-all duration-300 shadow-glow">
+        <Avatar className="h-10 w-10 ring-2 ring-primary/30 transition-all duration-300">
           {imageUrl ? (
             <AvatarImage
               src={imageUrl}
@@ -41,10 +41,10 @@ const ProfileInfo = () => {
               className="object-cover"
             />
           ) : (
-            <UserCircle2 className="text-dark-muted" />
+            <UserCircle2 className="text-muted-foreground" />
           )}
         </Avatar>
-        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-dark-primary shadow-glow" />
+        <span className="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full ring-2 ring-card" />
       </motion.div>
 
       <div className="flex-1 min-w-0">
@@ -52,7 +52,7 @@ const ProfileInfo = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="font-medium text-dark-text truncate bg-gradient-to-r from-blue-400 to-violet-400 text-transparent bg-clip-text"
+          className="font-medium text-foreground truncate"
         >
           {userInfo?.firstName && userInfo?.lastName
             ? `${userInfo.firstName} ${userInfo.lastName}`
@@ -62,7 +62,7 @@ const ProfileInfo = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-sm text-dark-muted truncate"
+          className="text-sm text-muted-foreground truncate"
         >
           Online
         </motion.p>
@@ -75,7 +75,7 @@ const ProfileInfo = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-dark-muted hover:text-blue-400 hover:bg-dark-accent/30 transition-colors"
+                className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
                 onClick={() => navigate("/profile")}
               >
                 <Settings size={18} />
@@ -93,7 +93,7 @@ const ProfileInfo = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-dark-muted hover:text-red-400 hover:bg-dark-accent/30 transition-colors"
+                className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-secondary transition-colors"
                 onClick={() => logout.mutate()}
               >
                 <LogOut size={18} />
