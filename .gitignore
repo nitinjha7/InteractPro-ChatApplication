@@ -49,3 +49,5 @@ Server/uploads/
 # local working notes
 DEVCHAT_PLAN.md
 docs/
+
+.worktrees/
