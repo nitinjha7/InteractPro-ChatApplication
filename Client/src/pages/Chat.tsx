@@ -19,7 +19,7 @@ const Chat = () => {
   }, [userInfo, navigate]);
 
   return (
-    <div className="flex justify-between">
+    <div className="flex flex-1 overflow-hidden">
       <ContactsContainer />
       {selectedChatType === undefined ? <EmptyChatContainer /> : <ChatContainer />}
     </div>

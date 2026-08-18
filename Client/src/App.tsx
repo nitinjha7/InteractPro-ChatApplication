@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { trpc } from '@/lib/trpc';
 import { useStore } from '@/store/store';
+import AppShell from '@/components/shell/AppShell';
 import Auth from '@/pages/Auth';
 import Chat from '@/pages/Chat';
 import Profile from '@/pages/Profile';
@@ -60,7 +61,9 @@ const App = () => {
           path="/chat"
           element={
             <ProtectedRoute>
-              <Chat />
+              <AppShell>
+                <Chat />
+              </AppShell>
             </ProtectedRoute>
           }
         />
@@ -76,7 +79,9 @@ const App = () => {
           path="/session"
           element={
             <ProtectedRoute>
-              <CodeSessionList />
+              <AppShell>
+                <CodeSessionList />
+              </AppShell>
             </ProtectedRoute>
           }
         />
@@ -84,7 +89,9 @@ const App = () => {
           path="/session/:sessionId"
           element={
             <ProtectedRoute>
-              <CodeSession />
+              <AppShell>
+                <CodeSession />
+              </AppShell>
             </ProtectedRoute>
           }
         />
