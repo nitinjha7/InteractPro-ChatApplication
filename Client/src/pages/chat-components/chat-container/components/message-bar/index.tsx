@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Smile, Paperclip, Send, Image, Mic, Code } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
+import { toast } from "sonner";
 import { useStore } from "@/store/store";
 import { useSocket } from "@/context/SocketContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -169,7 +170,7 @@ const MessageBar = () => {
               type="file"
               className="hidden"
               ref={fileInputRef}
-              onChange={(e) => console.log(e.target.files?.[0])}
+              onChange={() => toast.info('File attachments are coming soon')}
             />
             <Button
               variant="ghost"
