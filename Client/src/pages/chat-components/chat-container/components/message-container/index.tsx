@@ -67,7 +67,7 @@ const MessageContainer = () => {
           className="flex flex-col items-center"
         >
           {showDate && (
-            <div className="sticky top-2 bg-dark-accent/20 text-dark-muted py-1.5 px-4 text-center text-xs rounded-full my-4 backdrop-blur-sm z-10 w-fit">
+            <div className="sticky top-2 bg-secondary text-muted-foreground py-1.5 px-4 text-center text-xs rounded-full my-4 backdrop-blur-sm z-10 w-fit">
               {messageDate}
             </div>
           )}
@@ -77,37 +77,35 @@ const MessageContainer = () => {
             } w-full my-1`}
           >
             <div
-              className={`relative max-w-[70%] px-4 py-2.5 rounded-2xl ${
-                isSender
-                  ? message.messageType === "code"
-                    ? "bg-[#1E1E1E] text-white"
-                    : "bg-gradient-to-br from-blue-600 to-blue-700 text-white"
-                  : message.messageType === "code"
-                  ? "bg-[#1E1E1E] text-white"
-                  : "bg-dark-accent/30 text-dark-text backdrop-blur-sm"
+              className={`relative max-w-[70%] px-4 py-2.5 ${
+                message.messageType === "code"
+                  ? "font-mono bg-secondary border border-border rounded-lg"
+                  : isSender
+                  ? "rounded-2xl bg-primary text-primary-foreground"
+                  : "rounded-2xl bg-card text-card-foreground border border-border"
               } transition-all duration-200 hover:shadow-lg`}
             >
               {message.messageType === "code" ? (
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-muted-foreground">
                       {message.language}
                     </span>
                     <div className="relative">
                       <button
                         onClick={() => handleCopy(message.id, message.content ?? "")}
-                        className="text-xs text-gray-400 hover:text-white transition-colors"
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                       >
                         Copy
                       </button>
                       {isCopied && (
-                        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md">
+                        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-card text-card-foreground border border-border text-xs px-2 py-1 rounded-md">
                           Copied!
                         </div>
                       )}
                     </div>
                   </div>
-                  <pre className="text-sm font-mono overflow-x-auto">
+                  <pre className="text-sm overflow-x-auto">
                     <code
                       dangerouslySetInnerHTML={{
                         __html: highlight(
@@ -124,7 +122,7 @@ const MessageContainer = () => {
                   {message.content}
                 </p>
               )}
-              <span className="block text-right text-xs opacity-70 mt-1">
+              <span className="block text-right text-muted-foreground text-xs mt-1">
                 {moment(message.timeStamp).format("HH:mm")}
               </span>
             </div>
@@ -137,7 +135,7 @@ const MessageContainer = () => {
   return (
     <div
       ref={containerRef}
-      className="flex-1 bg-transparent text-dark-text flex flex-col p-6 overflow-y-auto custom-scrollbar"
+      className="flex-1 bg-transparent text-foreground flex flex-col p-6 overflow-y-auto custom-scrollbar"
     >
       <div className="flex flex-col space-y-2 min-h-0">
         {renderMessages()}

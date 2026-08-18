@@ -92,15 +92,15 @@ const MessageBar = () => {
     <motion.div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="p-4 bg-[#1a1b1e]/95 backdrop-blur-xl border-t border-[#2a2b2e] relative z-10"
+      className="p-4 bg-card/95 backdrop-blur-xl border-t border-border relative z-10"
     >
       <div className="flex flex-col gap-2">
         {isCodeMode && (
-          <div className="flex items-center gap-2 bg-[#2a2b2e] rounded-t-xl p-2">
+          <div className="flex items-center gap-2 bg-secondary rounded-t-xl p-2">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-[#1a1b1e] text-gray-100 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500/20"
+              className="bg-background text-foreground text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary/20"
             >
               {languageOptions.map((lang) => (
                 <option key={lang.value} value={lang.value}>
@@ -108,17 +108,17 @@ const MessageBar = () => {
                 </option>
               ))}
             </select>
-            <span className="text-sm text-gray-400">Code Mode</span>
+            <span className="text-sm text-muted-foreground">Code Mode</span>
           </div>
         )}
 
-        <div className="flex items-center gap-2 bg-[#2a2b2e] rounded-xl p-2">
+        <div className="flex items-center gap-2 bg-secondary rounded-xl p-2">
           <div className="flex items-center gap-1">
             <div className="relative">
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-gray-400 hover:text-white hover:bg-[#3a3b3e] w-9 h-9 rounded-lg"
+                className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
                 onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
               >
                 <Smile size={20} />
@@ -150,8 +150,8 @@ const MessageBar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className={`text-gray-400 hover:text-white w-9 h-9 rounded-lg ${
-                isCodeMode ? "bg-[#3a3b3e] text-indigo-400" : ""
+              className={`text-muted-foreground hover:text-foreground w-9 h-9 rounded-lg ${
+                isCodeMode ? "bg-primary/10 text-primary" : ""
               }`}
               onClick={toggleCodeMode}
             >
@@ -161,7 +161,7 @@ const MessageBar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-400 hover:text-white hover:bg-[#3a3b3e] w-9 h-9 rounded-lg"
+              className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
             >
               <Image size={20} />
             </Button>
@@ -175,7 +175,7 @@ const MessageBar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-400 hover:text-white hover:bg-[#3a3b3e] w-9 h-9 rounded-lg"
+              className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
               onClick={() => fileInputRef.current?.click()}
             >
               <Paperclip size={20} />
@@ -192,7 +192,7 @@ const MessageBar = () => {
                   maxHeight: "200px",
                   minHeight: "60px",
                 }}
-                className="w-full bg-[#1a1b1e] rounded-lg"
+                className="w-full bg-background rounded-lg"
               >
                 <Editor
                   value={message}
@@ -203,7 +203,7 @@ const MessageBar = () => {
                     fontFamily: '"JetBrains Mono", monospace',
                     fontSize: "14px",
                     lineHeight: "1.5",
-                    color: "#f1f1f1",
+                    color: "hsl(var(--foreground))",
                   }}
                   textareaClassName="focus:outline-none custom-scrollbar"
                   preClassName={`language-${language} custom-scrollbar`}
@@ -213,7 +213,7 @@ const MessageBar = () => {
               <Input
                 type="text"
                 placeholder="Type a message..."
-                className="w-full bg-[#1a1b1e] border-0 text-gray-100 placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-indigo-500/20 rounded-lg py-2.5"
+                className="w-full bg-background border-0 text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/20 rounded-lg py-2.5"
                 onChange={(e) => setMessage(e.target.value)}
                 value={message}
                 onKeyDown={(e) =>
@@ -227,7 +227,7 @@ const MessageBar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-400 hover:text-white hover:bg-[#3a3b3e] w-9 h-9 rounded-lg"
+              className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
             >
               <Mic size={20} />
             </Button>
@@ -237,8 +237,8 @@ const MessageBar = () => {
               size="icon"
               className={`w-9 h-9 rounded-lg ${
                 message.trim()
-                  ? "text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
-                  : "text-gray-400 hover:text-white hover:bg-[#3a3b3e]"
+                  ? "text-primary hover:text-primary hover:bg-primary/10"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}
               onClick={handleSendMessage}
               disabled={!message.trim()}
