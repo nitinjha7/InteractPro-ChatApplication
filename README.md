@@ -1,163 +1,145 @@
-# InteractPro
+# DevChat
 
-InteractPro is a modern real-time chat application designed to enhance communication through smart features, group collaboration, and seamless cross-platform support.
+A real-time chat application for developers, built on a full TypeScript stack
+with a collaborative code editor and AI-powered semantic search over chat
+history.
 
-## Table of Contents
-
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [Clone the Repository](#clone-the-repository)
-  - [Install Dependencies](#install-dependencies)
-  - [Environment Variables](#environment-variables)
-- [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Contributing](#contributing)
-- [License](#license)
+Originally built as InteractPro (React + Express + MongoDB), then migrated in
+six phases to the stack below.
 
 ## Features
 
-- **Real-time Messaging:** Instant communication with zero lag.
-- **Secure Authentication:** Profile management with JWT-based authentication.
-- **Cross-Platform Support:** Seamless experience across devices.
-- **File Sharing:** Upload and share files effortlessly.
+- Real-time direct messaging over Socket.io
+- **Collaborative code editor** — multiple people edit the same file live,
+  with visible cursors, powered by a CRDT (Yjs)
+- **AI semantic search** — ask a question in plain English and get an answer
+  that cites the real chat messages it came from, using Gemini + pgvector
+- Full end-to-end type safety from database to UI via Prisma + tRPC
+
+## Architecture
+
+```mermaid
+graph TB
+    subgraph Client["Client — React + Vite"]
+        UI[React UI]
+        TRPCClient[tRPC Client]
+        SocketClient[Socket.io Client]
+        YjsClient[Yjs + CodeMirror]
+    end
+
+    subgraph Server["Server — Express + tsx"]
+        Express[Express]
+        TRPCServer[tRPC Router]
+        SocketServer[Socket.io Server]
+        YSocketIO[y-socket.io]
+        AI[Gemini Client]
+    end
+
+    subgraph Data["Data"]
+        Postgres[(PostgreSQL + pgvector)]
+    end
+
+    UI --> TRPCClient
+    UI --> SocketClient
+    UI --> YjsClient
+
+    TRPCClient -->|"auth, chat, sessions, AI search"| TRPCServer
+    SocketClient -->|"send/receive messages"| SocketServer
+    YjsClient -->|"live document sync"| YSocketIO
+
+    TRPCServer --> Express
+    SocketServer --> Express
+    YSocketIO --> Express
+
+    TRPCServer -->|Prisma| Postgres
+    SocketServer -->|Prisma| Postgres
+    YSocketIO -->|"snapshot on disconnect"| Postgres
+    TRPCServer -->|"embed + search"| AI
+    AI -->|"vector search"| Postgres
+    SocketServer -.->|"background embed on send"| AI
+```
+
+**Two different real-time systems, on purpose:** chat messages are pushed
+over Socket.io because the server needs to notify a browser without being
+asked (a request-response API like tRPC has no way to do that). The
+collaborative editor uses a separate real-time layer, `y-socket.io`, because
+editing needs a CRDT merge protocol, not just message delivery — two people
+typing at once must always converge to the same text, which plain
+message-passing doesn't guarantee.
 
 ## Tech Stack
 
-### **Client:**
-- [React](https://reactjs.org/) - Frontend framework
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Zustand](https://zustand-demo.pmnd.rs/) - Lightweight state management
-- [Axios](https://axios-http.com/) - HTTP requests handling
-- [Framer Motion](https://www.framer.com/motion/) - Animation library
-- [Radix UI](https://www.radix-ui.com/) - Accessible components
+| Layer | Technology |
+|---|---|
+| Client | React 18.3, TypeScript, Vite 5.3, Tailwind CSS 3.4, Zustand 4.5, React Query (TanStack) 5.101 |
+| API | tRPC 11.18 (end-to-end types, no REST boilerplate) |
+| Real-time chat | Socket.io 4.8 |
+| Collaborative editor | Yjs 13.6 (CRDT) + `y-socket.io` 1.1 + CodeMirror 6 (`y-codemirror.next`) |
+| Database | PostgreSQL 16 + pgvector, via Prisma 6.19 |
+| AI | Google Gemini (`gemini-embedding-001` for search, `gemini-2.5-flash` for generation), via `@google/genai` 2.17 |
+| Testing | Vitest 2.1, Supertest — 71 server-side tests |
+| Dev environment | Docker Compose (Postgres), `tsx` (server), Vite dev server (client) |
 
-### **Server:**
-- [Node.js](https://nodejs.org/) - JavaScript runtime environment
-- [Express.js](https://expressjs.com/) - Fast backend framework
-- [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/) - NoSQL database and ODM
-- [Socket.io](https://socket.io/) - Real-time bidirectional event-based communication
-- [JWT](https://jwt.io/) - Secure authentication
-- [Cloudinary](https://cloudinary.com/) - File uploads handling
+Data model (`Server/prisma/schema.prisma`): `User`, `Message`, `CodeSession`,
+`SessionParticipant`, `Embedding`.
 
-## Installation
+## Getting Started
 
 ### Prerequisites
 
-Ensure you have the following installed:
+- Node.js 20+
+- Docker (for PostgreSQL)
+- A free Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) — optional; the app runs fully without one, with AI search disabled
 
-- [Node.js](https://nodejs.org/) (v14 or higher)
-- [MongoDB](https://www.mongodb.com/)
+### Setup
 
-### Clone the Repository
+```bash
+git clone <repo-url>
+cd InteractPro-ChatApplication
 
-```sh
-git clone https://github.com/your-username/InteractPro.git
-cd InteractPro
-```
+# start the database
+docker compose up -d
 
-### Install Dependencies
-
-#### Client
-```sh
-cd Client
-npm install
-```
-
-#### Server
-```sh
+# server
 cd Server
+cp .env.example .env   # fill in JWT_KEY at minimum; GEMINI_API_KEY is optional
 npm install
-```
+npx prisma db push
+npm run dev
 
-### Environment Variables
-
-Create a `.env` file in both the `Client` and `Server` directories and add the following:
-
-#### **Client (.env)**
-```env
-VITE_APP_SERVER_URL=http://localhost:4000
-```
-
-#### **Server (.env)**
-```env
-DATABASE_URL=mongodb://localhost:27017/interactpro
-JWT_KEY=your_jwt_secret_key
-CLIENT_URL=http://localhost:3000
-```
-
-## Usage
-
-### Running the Client
-```sh
+# client, in a second terminal
 cd Client
+cp .env.example .env
+npm install
 npm run dev
 ```
 
-### Running the Server
-```sh
+Open `http://localhost:5173`.
+
+### Running the tests
+
+```bash
 cd Server
-npm run dev
+npm test
 ```
 
-The client will run on `http://localhost:3000` and the server on `http://localhost:4000`.
-
-## Folder Structure
+## Project Structure
 
 ```
-Client/
-  ├── .env
-  ├── .eslintrc.cjs
-  ├── .gitignore
-  ├── components.json
-  ├── index.html
-  ├── jsconfig.json
-  ├── package.json
-  ├── postcss.config.js
-  ├── public/
-  ├── src/
-  │   ├── App.jsx
-  │   ├── assets/
-  │   ├── components/
-  │   ├── context/
-  │   ├── index.css
-  │   ├── lib/
-  │   ├── main.jsx
-  │   ├── pages/
-  │   └── store/
-  ├── tailwind.config.js
-  └── vite.config.js
-Server/
-  ├── .env
-  ├── config/
-  │   └── database.js
-  ├── controllers/
-  │   ├── AuthController.js
-  │   ├── ContactController.js
-  │   ├── messageController.js
-  │   └── profileController.js
-  ├── middlewares/
-  │   └── AuthMiddleware.js
-  ├── models/
-  ├── package.json
-  ├── routes/
-  ├── server.js
-  ├── socket.js
-  └── uploads/
+Client/          React + Vite frontend
+Server/          Express + tRPC backend
+  trpc/          tRPC routers (auth, chat, codeSession, ai)
+  lib/ai/        Gemini client, embedding storage, background ingestion
+  yjs/           collaborative editor server (y-socket.io + snapshots)
+  prisma/        database schema and migrations
+  tests/         71 Vitest tests
 ```
 
-## Contributing
+## Known Limitations
 
-Contributions are welcome! Please follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -m 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a pull request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE). Feel free to use and modify the code for your own purposes.
-
+- **Dark theme only.** No light-mode toggle exists yet — every component uses
+  hardcoded dark colors rather than theme-aware tokens. A light theme would be
+  a natural next addition but touches enough components that it didn't fit
+  cleanly into a polish pass.
+- File attachments in chat are not yet implemented — the UI element exists but
+  is not wired to an upload flow.
