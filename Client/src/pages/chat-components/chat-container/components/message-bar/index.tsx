@@ -118,7 +118,7 @@ const MessageBar = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
+                className="text-muted-foreground hover:text-foreground hover:bg-accent/15 w-9 h-9 rounded-lg"
                 onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
               >
                 <Smile size={20} />
@@ -161,7 +161,7 @@ const MessageBar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
+              className="text-muted-foreground hover:text-foreground hover:bg-accent/15 w-9 h-9 rounded-lg"
             >
               <Image size={20} />
             </Button>
@@ -175,7 +175,7 @@ const MessageBar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
+              className="text-muted-foreground hover:text-foreground hover:bg-accent/15 w-9 h-9 rounded-lg"
               onClick={() => fileInputRef.current?.click()}
             >
               <Paperclip size={20} />
@@ -227,7 +227,7 @@ const MessageBar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground hover:text-foreground hover:bg-secondary w-9 h-9 rounded-lg"
+              className="text-muted-foreground hover:text-foreground hover:bg-accent/15 w-9 h-9 rounded-lg"
             >
               <Mic size={20} />
             </Button>
@@ -238,7 +238,7 @@ const MessageBar = () => {
               className={`w-9 h-9 rounded-lg ${
                 message.trim()
                   ? "text-primary hover:text-primary hover:bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/15"
               }`}
               onClick={handleSendMessage}
               disabled={!message.trim()}
