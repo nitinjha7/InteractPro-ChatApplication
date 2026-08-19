@@ -27,21 +27,21 @@ const DmDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-dark-secondary border border-dark-accent/30 text-dark-text sm:max-w-[425px] animate-fadeIn backdrop-blur-sm">
+      <DialogContent className="border-border sm:max-w-[425px] animate-fadeIn backdrop-blur-sm">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold flex items-center gap-2">
-            <Plus size={20} className="text-blue-400" />
+            <Plus size={20} className="text-primary" />
             New Message
           </DialogTitle>
         </DialogHeader>
 
         <div className="relative">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-muted"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={18}
           />
           <Input
-            className="pl-10 bg-dark-accent/30 border-dark-accent/30 text-dark-text placeholder:text-dark-muted"
+            className="pl-10 bg-accent/30 border-border placeholder:text-muted-foreground"
             placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -62,19 +62,19 @@ const DmDialog = ({
                   onOpenChange(false);
                   setSearchTerm("");
                 }}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-dark-accent/30 cursor-pointer group transition-colors backdrop-blur-sm"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent/30 cursor-pointer group transition-colors backdrop-blur-sm"
               >
                 <div className="flex-1">
-                  <h4 className="font-medium text-dark-text group-hover:text-blue-400 transition-colors">
+                  <h4 className="font-medium text-foreground group-hover:text-primary transition-colors">
                     {contact.firstName && contact.lastName
                       ? `${contact.firstName} ${contact.lastName}`
                       : "No Name"}
                   </h4>
-                  <p className="text-sm text-dark-muted">{contact.email}</p>
+                  <p className="text-sm text-muted-foreground">{contact.email}</p>
                 </div>
                 <Plus
                   size={18}
-                  className="text-dark-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                 />
               </motion.div>
             ))}
@@ -84,7 +84,7 @@ const DmDialog = ({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-8 text-dark-muted"
+              className="text-center py-8 text-muted-foreground"
             >
               <Search size={48} className="mx-auto mb-3 opacity-50" />
               <p>No users found</p>

@@ -42,36 +42,36 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-primary flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl border border-dark-accent/30 bg-dark-secondary p-8 shadow-xl">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-xl">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-dark-text">Your profile</h1>
+          <h1 className="text-2xl font-bold text-foreground">Your profile</h1>
           <Button variant="ghost" size="sm" onClick={() => logout.mutate()}>
             <LogOut className="mr-2 h-4 w-4" /> Logout
           </Button>
         </div>
 
         <div className="mb-6 flex justify-center">
-          <Avatar className="h-20 w-20 ring-2 ring-blue-500/30">
+          <Avatar className="h-20 w-20 ring-2 ring-primary/30">
             {userInfo?.image ? (
               <AvatarImage src={userInfo.image} alt="Profile" className="object-cover" />
             ) : (
-              <UserCircle2 className="text-dark-muted" />
+              <UserCircle2 className="text-muted-foreground" />
             )}
           </Avatar>
         </div>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-dark-text">Email</label>
-            <Input value={userInfo?.email ?? ''} disabled className="bg-dark-accent/20" />
+            <label className="text-sm font-medium text-foreground">Email</label>
+            <Input value={userInfo?.email ?? ''} disabled className="bg-accent/20" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-dark-text">First name</label>
+            <label className="text-sm font-medium text-foreground">First name</label>
             <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-dark-text">Last name</label>
+            <label className="text-sm font-medium text-foreground">Last name</label>
             <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { MessageSquare, Code, Zap, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import DmDialog from "@/pages/chat-components/contacts-dialog-box";
 import { useStore } from "@/store/store";
 import type { User } from "@/types";
@@ -35,7 +36,7 @@ const EmptyChatContainer = () => {
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ repeat: Infinity, repeatType: "mirror", duration: 1 }}
-            className="bg-yellow-500 text-black text-xs font-semibold px-2 py-1 rounded-md"
+            className="bg-warning text-warning-foreground text-xs font-semibold px-2 py-1 rounded-md"
           >
             Coming Soon
           </motion.span>
@@ -46,7 +47,7 @@ const EmptyChatContainer = () => {
   ];
 
   return (
-    <div className="w-full h-screen bg-gradient-to-b from-gray-950 to-gray-900 text-white overflow-hidden">
+    <div className="w-full h-screen bg-background text-foreground overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 h-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -60,34 +61,35 @@ const EmptyChatContainer = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-5xl md:text-6xl font-bold tracking-tight"
+              className="text-5xl md:text-6xl font-bold tracking-tight text-foreground"
             >
-              Welcome to{" "}
-              <span className="bg-gradient-to-r from-blue-500 to-violet-500 text-transparent bg-clip-text">
-                InteractPro
-              </span>
+              Welcome to DevChat
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-lg text-gray-400"
+              className="text-lg text-muted-foreground"
             >
               Start a conversation, connect with others, and experience
               communication reimagined
             </motion.p>
 
-            <motion.button
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
-              onClick={() => setOpenNewContactModal(true)}
             >
-              Start Chatting
-              <ArrowRight className="w-4 h-4" />
-            </motion.button>
+              <Button
+                size="lg"
+                className="gap-2"
+                onClick={() => setOpenNewContactModal(true)}
+              >
+                Start Chatting
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </motion.div>
           </div>
 
           {/* Features Grid */}
@@ -103,13 +105,13 @@ const EmptyChatContainer = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + index * 0.2 }}
-                className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 hover:border-blue-500/50 transition-colors duration-200"
+                className="bg-card backdrop-blur-sm p-6 rounded-xl border border-border hover:border-primary/50 transition-colors duration-200"
               >
-                <div className="p-3 bg-blue-500/10 rounded-lg w-fit mb-4">
+                <div className="p-3 bg-primary/10 rounded-lg w-fit mb-4">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-400 text-sm">{feature.description}</p>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm">{feature.description}</p>
               </motion.div>
             ))}
           </motion.div>
