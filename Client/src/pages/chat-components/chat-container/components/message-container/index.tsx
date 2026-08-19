@@ -122,7 +122,13 @@ const MessageContainer = () => {
                   {message.content}
                 </p>
               )}
-              <span className="block text-right text-muted-foreground text-xs mt-1">
+              <span
+                className={`block text-right text-xs mt-1 ${
+                  message.messageType !== "code" && isSender
+                    ? "text-primary-foreground/70"
+                    : "text-muted-foreground"
+                }`}
+              >
                 {moment(message.timeStamp).format("HH:mm")}
               </span>
             </div>

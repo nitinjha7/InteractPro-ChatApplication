@@ -71,7 +71,9 @@ const App = () => {
           path="/profile"
           element={
             <ProtectedRoute>
-              <Profile />
+              <AppShell>
+                <Profile />
+              </AppShell>
             </ProtectedRoute>
           }
         />
@@ -80,7 +82,12 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AppShell>
-                <CodeSessionList />
+                <div className="flex flex-1 overflow-hidden">
+                  <CodeSessionList />
+                  <div className="flex flex-1 items-center justify-center bg-background text-muted-foreground">
+                    Select a session or create a new one
+                  </div>
+                </div>
               </AppShell>
             </ProtectedRoute>
           }
@@ -90,7 +97,10 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AppShell>
-                <CodeSession />
+                <div className="flex flex-1 overflow-hidden">
+                  <CodeSessionList />
+                  <CodeSession />
+                </div>
               </AppShell>
             </ProtectedRoute>
           }

@@ -42,7 +42,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="h-full w-full bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-foreground">Your profile</h1>
@@ -64,7 +64,7 @@ const Profile = () => {
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Email</label>
-            <Input value={userInfo?.email ?? ''} disabled className="bg-accent/20" />
+            <Input value={userInfo?.email ?? ''} disabled className="bg-secondary" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">First name</label>

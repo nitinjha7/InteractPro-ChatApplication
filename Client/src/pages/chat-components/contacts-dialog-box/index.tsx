@@ -41,7 +41,7 @@ const DmDialog = ({
             size={18}
           />
           <Input
-            className="pl-10 bg-accent/30 border-border placeholder:text-muted-foreground"
+            className="pl-10 bg-secondary border-border placeholder:text-muted-foreground"
             placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -62,7 +62,7 @@ const DmDialog = ({
                   onOpenChange(false);
                   setSearchTerm("");
                 }}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent/30 cursor-pointer group transition-colors backdrop-blur-sm"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary cursor-pointer group transition-colors backdrop-blur-sm"
               >
                 <div className="flex-1">
                   <h4 className="font-medium text-foreground group-hover:text-primary transition-colors">

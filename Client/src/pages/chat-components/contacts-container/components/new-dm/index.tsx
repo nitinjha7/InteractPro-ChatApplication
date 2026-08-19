@@ -30,7 +30,7 @@ const NewDm = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setOpenNewContactModal(true)}
-              className="p-2 rounded-full hover:bg-accent/30 transition-colors backdrop-blur-sm"
+              className="p-2 rounded-full hover:bg-secondary transition-colors backdrop-blur-sm"
             >
               <UserPlus size={18} className="text-primary" />
             </motion.button>

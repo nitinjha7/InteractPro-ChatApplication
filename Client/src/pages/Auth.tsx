@@ -75,7 +75,7 @@ const Auth = () => {
               onClick={() => setIsLogin(true)}
               className={cn(
                 'z-10 w-1/2 rounded-lg py-2 text-sm font-medium transition-colors',
-                isLogin ? 'text-white' : 'text-muted-foreground'
+                isLogin ? 'text-primary-foreground' : 'text-muted-foreground'
               )}
             >
               Sign In
@@ -84,7 +84,7 @@ const Auth = () => {
               onClick={() => setIsLogin(false)}
               className={cn(
                 'z-10 w-1/2 rounded-lg py-2 text-sm font-medium transition-colors',
-                !isLogin ? 'text-white' : 'text-muted-foreground'
+                !isLogin ? 'text-primary-foreground' : 'text-muted-foreground'
               )}
             >
               Sign Up
