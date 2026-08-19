@@ -30,7 +30,7 @@ export default function CodeSession() {
 
   if (!data?.session) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-dark-primary text-dark-text">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-background text-foreground">
         <p>This session could not be opened.</p>
         <Button onClick={() => navigate('/session')}>Back to sessions</Button>
       </div>
@@ -41,14 +41,14 @@ export default function CodeSession() {
   const me = session.participants.find((p) => p.userId === userInfo?.id);
 
   return (
-    <div className="flex h-screen flex-col bg-dark-primary text-dark-text">
-      <div className="flex items-center gap-4 border-b border-dark-accent/30 px-4 py-3">
+    <div className="flex h-full w-full flex-col bg-background text-foreground">
+      <div className="flex items-center gap-4 border-b border-border px-4 py-3">
         <Button variant="ghost" size="sm" onClick={() => navigate('/session')}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Sessions
         </Button>
         <div>
           <div className="font-medium">{session.name}</div>
-          <div className="text-xs text-dark-muted">{session.language}</div>
+          <div className="text-xs text-muted-foreground">{session.language}</div>
         </div>
       </div>
 
@@ -57,7 +57,7 @@ export default function CodeSession() {
           sessionId={session.id}
           language={session.language}
           userName={userInfo?.firstName || userInfo?.email || 'Anonymous'}
-          userColor={me?.color ?? '#3b82f6'}
+          userColor={me?.color ?? '#f4753e'}
         />
       </div>
     </div>

@@ -71,13 +71,20 @@ export default function CollaborativeEditor({ sessionId, language, userName, use
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-dark-accent/30 px-4 py-2 text-sm text-dark-muted">
-        <span>{connected ? 'Connected' : 'Connecting…'}</span>
+      <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2 text-sm text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <span
+            className={`h-2 w-2 rounded-full ${connected ? 'bg-success' : 'bg-muted-foreground'}`}
+          />
+          {connected ? 'Connected' : 'Connecting…'}
+        </span>
         <span>
           {peers} {peers === 1 ? 'person' : 'people'} here
         </span>
       </div>
-      <div ref={hostRef} className="min-h-0 flex-1" />
+      <div className="min-h-0 flex-1 overflow-hidden rounded-b-lg border-x border-b border-border">
+        <div ref={hostRef} className="h-full" />
+      </div>
     </div>
   );
 }
