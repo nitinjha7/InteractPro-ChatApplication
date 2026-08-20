@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Loader2, LogOut, UserCircle2 } from 'lucide-react';
+import { Camera, Loader2, LogOut, UserCircle2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
@@ -16,6 +16,35 @@ const Profile = () => {
 
   const [firstName, setFirstName] = useState(userInfo?.firstName ?? '');
   const [lastName, setLastName] = useState(userInfo?.lastName ?? '');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAvatarClick = () => fileInputRef.current?.click();
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const body = new FormData();
+      body.append('profile-image', file);
+      const res = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/upload-image`, {
+        method: 'POST',
+        credentials: 'include',
+        body,
+      });
+      if (!res.ok) throw new Error('Upload failed');
+      const data = await res.json();
+      setUserInfo({ ...userInfo, image: data.image } as never);
+      toast.success('Profile picture updated');
+    } catch {
+      toast.error('Could not upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const updateProfile = trpc.auth.updateProfile.useMutation({
     onSuccess: (data) => {
@@ -52,13 +81,34 @@ const Profile = () => {
         </div>
 
         <div className="mb-6 flex justify-center">
-          <Avatar className="h-20 w-20 ring-2 ring-primary/30">
-            {userInfo?.image ? (
-              <AvatarImage src={userInfo.image} alt="Profile" className="object-cover" />
-            ) : (
-              <UserCircle2 className="text-muted-foreground" />
-            )}
-          </Avatar>
+          <button
+            type="button"
+            onClick={handleAvatarClick}
+            disabled={uploadingImage}
+            className="group relative rounded-full"
+          >
+            <Avatar className="h-20 w-20 ring-2 ring-primary/30">
+              {userInfo?.image ? (
+                <AvatarImage src={userInfo.image} alt="Profile" className="object-cover" />
+              ) : (
+                <UserCircle2 className="text-muted-foreground" />
+              )}
+            </Avatar>
+            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-background/70 opacity-0 transition-opacity group-hover:opacity-100">
+              {uploadingImage ? (
+                <Loader2 className="h-5 w-5 animate-spin text-foreground" />
+              ) : (
+                <Camera className="h-5 w-5 text-foreground" />
+              )}
+            </span>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
+          />
         </div>
 
         <div className="space-y-4">
