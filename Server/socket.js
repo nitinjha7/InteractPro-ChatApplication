@@ -1,5 +1,6 @@
-const {Server} = require('socket.io');
-const Message = require('./models/MessageModel');
+const { Server } = require('socket.io');
+const prisma = require('./config/prisma');
+const { toMessage } = require('./lib/serialize');
 
 const setupSocket = (server) => {
     const io = new Server(server, {
@@ -16,11 +17,22 @@ const setupSocket = (server) => {
         const senderSocketId = userSocketMap.get(message.sender);
         const recipientSocketId = userSocketMap.get(message.recipient);
 
-        const createdMessage = await Message.create(message);
+        const created = await prisma.message.create({
+            data: {
+                senderId: message.sender,
+                recipientId: message.recipient,
+                messageType: message.messageType,
+                content: message.content ?? null,
+                fileUrl: message.fileUrl ?? null,
+                language: message.language ?? null,
+            },
+            include: {
+                sender: true,
+                recipient: true,
+            },
+        });
 
-        const messageData = await Message.findById(createdMessage._id)
-          .populate("sender", "id name firstName lastName image")
-          .populate("recipient", "id name firstName lastName image");
+        const messageData = toMessage(created);
 
         if(senderSocketId){
             io.to(senderSocketId).emit("receiveMessage", messageData);
@@ -29,6 +41,10 @@ const setupSocket = (server) => {
         if(recipientSocketId){
             io.to(recipientSocketId).emit("receiveMessage", messageData);
         }
+
+        import('./lib/ai/ingest.mjs')
+            .then(({ ingestMessage }) => ingestMessage(created))
+            .catch(() => {});
     }
 
     io.on('connection', (socket) => {
@@ -48,6 +64,8 @@ const setupSocket = (server) => {
             console.log(`User disconnected: ${userId}`);
         });
     })
+
+    return io;
 };
 
 module.exports = setupSocket;

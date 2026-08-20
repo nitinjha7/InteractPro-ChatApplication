@@ -46,3 +46,8 @@ jspm_packages/
 
 # Ignore uploads directory in the server
 Server/uploads/
+# local working notes
+DEVCHAT_PLAN.md
+docs/
+
+.worktrees/

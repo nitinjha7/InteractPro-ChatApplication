@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  password     String
+  firstName    String?  @map("first_name")
+  lastName     String?  @map("last_name")
+  image        String?
+  color        Int?
+  profileSetup Boolean  @default(false) @map("profile_setup")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  ownedSessions       CodeSession[]        @relation("OwnedSessions")
+  sessionParticipants SessionParticipant[] @relation("SessionParticipants")
+
+  @@map("users")
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  senderId    String   @map("sender_id")
+  recipientId String?  @map("recipient_id")
+  messageType String   @map("message_type")
+  content     String?
+  fileUrl     String?  @map("file_url")
+  language    String?
+  embedding   Embedding?
+  timeStamp   DateTime @default(now()) @map("time_stamp")
+
+  sender    User  @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient User? @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: SetNull)
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([timeStamp])
+  @@map("messages")
+}
+
+model CodeSession {
+  id        String   @id @default(cuid())
+  name      String
+  language  String
+  content   String   @default("")
+  snapshot  Bytes?
+  ownerId   String   @map("owner_id")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner        User                 @relation("OwnedSessions", fields: [ownerId], references: [id], onDelete: Cascade)
+  participants SessionParticipant[]
+
+  @@index([ownerId])
+  @@map("code_sessions")
+}
+
+model SessionParticipant {
+  id        String   @id @default(cuid())
+  sessionId String   @map("session_id")
+  userId    String   @map("user_id")
+  color     String
+  joinedAt  DateTime @default(now()) @map("joined_at")
+
+  session CodeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User        @relation("SessionParticipants", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@map("session_participants")
+}
+
+model Embedding {
+  id        String   @id @default(cuid())
+  messageId String   @unique @map("message_id")
+  content   String
+  embedding Unsupported("vector(768)")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("embeddings")
+}

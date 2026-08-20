@@ -1,6 +1,4 @@
-const User = require("../models/UserModel");
-const { renameSync, unlinkSync } = require("fs");
-const path = require("path");
+const prisma = require("../config/prisma");
 const cloudinary = require("../config/cloudinary");
 
 const updateProfile = async (req, res) => {
@@ -12,18 +10,13 @@ const updateProfile = async (req, res) => {
       return res.status(400).json({ error: "Please fill in all fields" });
     }
 
-    const userData = await User.findByIdAndUpdate(
-      id,
-      {
-        firstName,
-        lastName,
-        profileSetup: true,
-      },
-      { new: true, runValidators: true }
-    );
+    const userData = await prisma.user.update({
+      where: { id },
+      data: { firstName, lastName, profileSetup: true },
+    });
 
     return res.status(200).json({
-      id: userData._id,
+      id: userData.id,
       email: userData.email,
       firstName: userData.firstName,
       lastName: userData.lastName,
@@ -31,7 +24,6 @@ const updateProfile = async (req, res) => {
       image: userData.image,
     });
   } catch (err) {
-    // console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -43,14 +35,7 @@ const uploadImage = async (req, res) => {
     }
 
     const userId = req.id;
-    const user = await User.findById(userId);
 
-    //if already have a profile pic then we will first delete that
-    if (user.cloudinary_id) {
-      await cloudinary.uploader.destroy(user.cloudinary_id);
-    }
-
-    //upload new image to cloudinary
     const cloudinaryResponse = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
@@ -68,14 +53,15 @@ const uploadImage = async (req, res) => {
       stream.end(req.file.buffer);
     });
 
-    user.image = cloudinaryResponse.secure_url;
-    await user.save();
-    // console.log("Cloudinary link: ", cloudinaryResponse.secure_url);
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { image: cloudinaryResponse.secure_url },
+    });
+
     return res.status(200).json({
       image: user.image,
     });
   } catch (err) {
-    // console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -83,20 +69,21 @@ const uploadImage = async (req, res) => {
 const deleteImage = async (req, res) => {
   try {
     const userId = req.id;
-    const user = await User.findById(userId);
-    if(!user.image){
-      // console.log("No image found");
-      return res.status(400).json({error: 'No image found'});
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user.image) {
+      return res.status(400).json({ error: "No image found" });
     }
 
     await cloudinary.uploader.destroy(`profile-images/${userId}`);
 
-    user.image = null;
-    await user.save();
+    await prisma.user.update({
+      where: { id: userId },
+      data: { image: null },
+    });
 
     return res.status(200).send("Profile image deleted");
   } catch (err) {
-    // console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
