@@ -92,7 +92,7 @@ const Auth = () => {
           </div>
         </div>
 
-        <h1 className="mb-6 text-center text-2xl font-bold text-foreground">DevChat</h1>
+        <h1 className="mb-6 text-center text-2xl font-bold text-foreground">InteractPro</h1>
 
         <div className="space-y-6">
           <div className="space-y-2">

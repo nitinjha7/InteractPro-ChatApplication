@@ -56,9 +56,9 @@ const ChatHeader = () => {
           size="icon"
           onClick={() => setAskOpen((v) => !v)}
           title="Ask your chat history"
-          className="text-muted-foreground hover:text-primary hover:bg-secondary w-9 h-9 rounded-full"
+          className="w-9 h-9 rounded-full bg-primary/15 text-primary shadow-[0_0_12px_hsl(var(--primary)/0.35)] hover:bg-primary/25 hover:text-primary"
         >
-          <Sparkles size={18} />
+          <Sparkles size={18} className="fill-primary/20" />
         </Button>
         <Button
           variant="ghost"

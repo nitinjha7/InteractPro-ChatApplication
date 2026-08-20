@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { MessageSquare, Code, Zap, ArrowRight } from "lucide-react";
+import { MessageSquare, Code2, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DmDialog from "@/pages/chat-components/contacts-dialog-box";
 import { useStore } from "@/store/store";
@@ -23,26 +23,14 @@ const EmptyChatContainer = () => {
       description: "Experience instant communication with zero lag",
     },
     {
-      icon: <Code className="w-6 h-6" />,
-      title: "Code Snippet Sharing",
-      description: "Send and receive code snippets directly in the chat",
+      icon: <Code2 className="w-6 h-6" />,
+      title: "Collaborative Code Editor",
+      description: "Edit code together in real time, with live cursors and no merge conflicts",
     },
     {
-      icon: <Zap className="w-6 h-6" />,
-      title: (
-        <span className="flex items-center gap-2">
-          Smart Features
-          <motion.span
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ repeat: Infinity, repeatType: "mirror", duration: 1 }}
-            className="bg-warning text-warning-foreground text-xs font-semibold px-2 py-1 rounded-md"
-          >
-            Coming Soon
-          </motion.span>
-        </span>
-      ),
-      description: "AI-powered suggestions and automated responses",
+      icon: <Sparkles className="w-6 h-6" />,
+      title: "AI Chat Search",
+      description: "Ask a question and get an answer cited from your real conversation history",
     },
   ];
 
@@ -63,7 +51,7 @@ const EmptyChatContainer = () => {
               transition={{ delay: 0.2 }}
               className="text-5xl md:text-6xl font-bold tracking-tight text-foreground"
             >
-              Welcome to DevChat
+              Welcome to InteractPro
             </motion.h1>
 
             <motion.p

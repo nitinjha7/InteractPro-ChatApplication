@@ -1,11 +1,11 @@
-# DevChat
+# InteractPro
 
 A real-time chat application for developers, built on a full TypeScript stack
 with a collaborative code editor and AI-powered semantic search over chat
 history.
 
-Originally built as InteractPro (React + Express + MongoDB), then migrated in
-six phases to the stack below.
+Originally built on React + Express + MongoDB, then migrated in six phases
+to the stack below.
 
 ## Features
 
