@@ -9,7 +9,16 @@ export interface Context {
   res: Response;
 }
 
-const t = initTRPC.context<Context>().create({ transformer: superjson });
+const t = initTRPC.context<Context>().create({
+  transformer: superjson,
+  errorFormatter: ({ shape, error }) => {
+    if (error.code === 'INTERNAL_SERVER_ERROR') {
+      console.error(error);
+      return { ...shape, message: 'Something went wrong. Please try again.' };
+    }
+    return shape;
+  },
+});
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
