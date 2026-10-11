@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -36,8 +36,12 @@ const Auth = () => {
     onSuccess,
     onError: (e) => toast.error(e.message),
   });
+  const demoLogin = trpc.auth.demoLogin.useMutation({
+    onSuccess,
+    onError: (e) => toast.error(e.message),
+  });
 
-  const loading = login.isPending || signup.isPending;
+  const loading = login.isPending || signup.isPending || demoLogin.isPending;
 
   const handleSubmit = () => {
     if (!email || !password) {
@@ -161,6 +165,37 @@ const Auth = () => {
               <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
             )}
           </Button>
+
+          {isLogin && (
+            <>
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="h-px flex-1 bg-border" />
+                <span>or</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+              <Button
+                type="button"
+                onClick={() => demoLogin.mutate()}
+                disabled={loading}
+                className="w-full rounded-lg border-2 border-warning bg-warning font-semibold text-warning-foreground shadow-lg shadow-warning/25 ring-1 ring-warning/30 transition-all hover:-translate-y-0.5 hover:bg-warning/90 hover:shadow-warning/40"
+              >
+                {demoLogin.isPending ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Opening demo...
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    Continue as Demo User
+                  </span>
+                )}
+              </Button>
+              <p className="text-center text-xs text-muted-foreground">
+                Explore the app without creating an account.
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>

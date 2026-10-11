@@ -25,6 +25,13 @@ const credentials = z.object({
   password: z.string().min(8),
 });
 
+const demoAccount = {
+  email: 'demo@interactpro.app',
+  password: 'InteractProDemo2026!',
+  firstName: 'InteractPro',
+  lastName: 'Demo',
+};
+
 export const authRouter = router({
   signup: publicProcedure.input(credentials).mutation(async ({ ctx, input }) => {
     const existing = await ctx.prisma.user.findUnique({ where: { email: input.email } });
@@ -50,6 +57,29 @@ export const authRouter = router({
       setAuthCookie(ctx.res, user);
       return { user: toUser(user) };
     }),
+
+  demoLogin: publicProcedure.mutation(async ({ ctx }) => {
+    const password = await bcrypt.hash(demoAccount.password, await bcrypt.genSalt());
+    const user = await ctx.prisma.user.upsert({
+      where: { email: demoAccount.email },
+      update: {
+        password,
+        firstName: demoAccount.firstName,
+        lastName: demoAccount.lastName,
+        profileSetup: true,
+      },
+      create: {
+        email: demoAccount.email,
+        password,
+        firstName: demoAccount.firstName,
+        lastName: demoAccount.lastName,
+        profileSetup: true,
+      },
+    });
+
+    setAuthCookie(ctx.res, user);
+    return { user: toUser(user) };
+  }),
 
   logout: publicProcedure.mutation(({ ctx }) => {
     ctx.res.clearCookie('token', cookieOptions);

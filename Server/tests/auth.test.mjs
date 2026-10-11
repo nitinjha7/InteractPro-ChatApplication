@@ -65,6 +65,22 @@ describe('auth.login', () => {
   });
 });
 
+describe('auth.demoLogin', () => {
+  it('creates and signs in the demo user without credentials', async () => {
+    const res = await call('auth.demoLogin').send({ json: {} });
+    expect(res.status).toBe(200);
+    expect(cookieOf(res)).toContain('token=');
+    expect(res.body.result.data.json.user.email).toBe('demo@interactpro.app');
+    expect(res.body.result.data.json.user.profileSetup).toBe(true);
+  });
+
+  it('reuses the same demo user on subsequent access', async () => {
+    const first = await call('auth.demoLogin').send({ json: {} });
+    const second = await call('auth.demoLogin').send({ json: {} });
+    expect(second.body.result.data.json.user.id).toBe(first.body.result.data.json.user.id);
+  });
+});
+
 describe('auth.userInfo', () => {
   it('returns the signed-in user', async () => {
     const signup = await call('auth.signup').send({ json: { email: 'a@t.com', password: 'pass1234' } });
