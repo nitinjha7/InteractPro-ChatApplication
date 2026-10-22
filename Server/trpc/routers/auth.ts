@@ -11,6 +11,7 @@ const cookieOptions = {
   httpOnly: true,
   secure: true,
   sameSite: 'none',
+  partitioned: true,
 } as const;
 
 const setAuthCookie = (res: Response, user: { id: string; email: string }) => {

@@ -12,6 +12,7 @@ const cookieOptions = {
   httpOnly: true,
   secure: true,
   sameSite: "none",
+  partitioned: true,
 };
 
 const signUp = async (req, res) => {
